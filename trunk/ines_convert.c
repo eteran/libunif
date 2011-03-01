@@ -483,11 +483,12 @@ void get_ines_mapper(const char *board_name, ines_info_t *info) {
 
 	const mapr_num_table_t *tbl_ptr = 0;
 	mapr_num_table_t table[] = {
-		/* name, ines #, chr-rom */
+		/* name, ines #, chr-rom, four_screen */
 		{ "NROM",		0, 1, 0 },		/* NROM: No mapper, PRG-ROM, CHR-ROM */
 		{ "NES-RROM",	0, 1, 0 },		/* NES-RROM: Same as NROM (Only used in Clu Clu land) */
 		{ "SNROM",		1, 0, 0 },		/* SNROM: MMC1A, PRG ROM, CHR ROM/RAM ?, 8k optional RAM (battery)   */
 		{ "SOROM",		1, 0, 0 },		/* SOROM: MMC1B2, PRG ROM, VRAM, 16K of WRAM (Battery) Only 8K battery-backed */
+		{ "SGROM",		1, 0, 0 },		/* SGROM: MMC1B, PRG ROM, 8k CHR-RAM */
 		{ "SVROM",		1, 0, 0 },		/* SVROM: MMC1B2, PRG ROM, VRAM, WRAM (Battery) */
 		{ "SUROM",		1, 0, 0 },		/* SUROM: MMC1B2, PRG ROM, CHR RAM/(ROM?), 8k battery-backed RAM (DW4???) */
 		{ "SAROM",		1, 1, 0 },		/* SAROM: MMC1B, PRG ROM, CHR ROM, optional 8k of RAM (battery) */
@@ -512,7 +513,6 @@ void get_ines_mapper(const char *board_name, ines_info_t *info) {
 		{ "EWROM",		5, 1, 0 },		/* EWROM: MMC5, PRG-ROM, CHR-ROM, 32k optionnal RAM (battery) */
 		{ "AOROM",		7, 1, 0 },		/* AOROM: LS161 mapper, PRG-ROM, CHR-ROM */
 		{ "PNROM",		9, 1, 0 },		/* PNROM: MMC2, PRG-ROM, CHR-ROM */
-		{ "SGROM",		1, 0, 0 },		/* SGROM: MMC1B, PRG ROM, 8k CHR-RAM */
 		{ 0, 0, 0, 0  }
 
 /*
@@ -534,7 +534,6 @@ NES-BTR: Sunsoft FME7 mapper, PRG ROM, CHR ROM, 8k optionnal RAM
 SC1ROM: MMC1B, PRG ROM, CHR ROM
 SCROM: LS161, LS02, VRAM, PRG-ROM (Similar to UNROM)
 SEROM: MMC1B, PRG ROM, CHR ROM
-
 SKROM: MMC1B, PRG ROM, CHR ROM, 8k optional RAM (battery)
 SLROM: MMC1A, PRG ROM, CHR ROM
 SN1-ROM AW (Overlord only)
@@ -583,7 +582,7 @@ CART_TYPE get_cart_type(const char *filename) {
 		return CART_UNIF;
     }
 
-	ret = check_header_INES(&(headers.ines_header));
+	ret = check_header_INES(&(headers.ines_header), 1);
 	if(ret == UNIF_OK || ret == UNIF_DIRTY_HEADER) {
 		return CART_INES;
     }
