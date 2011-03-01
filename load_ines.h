@@ -14,6 +14,7 @@ typedef struct {
 	uint8_t			*trainer;
 	uint8_t			*prg_rom;
 	uint8_t			*chr_rom;
+	uint8_t			version;
 } ines_cart_t;
 
 /* some example implementations for loading and freeing a INES file */

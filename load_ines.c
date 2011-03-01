@@ -26,7 +26,7 @@ UNIF_RETURN_CODE write_file_INES(const char *filename, const ines_cart_t *cart) 
 		return retcode;
 	}
 	
-	if((retcode = write_header_INES(file, &(cart->header))) != UNIF_OK) {
+	if((retcode = write_header_INES(file, &cart->header)) != UNIF_OK) {
 		close_INES(file);
 		return retcode;
 	}
@@ -70,8 +70,12 @@ UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, ines_cart_t *cart) {
 	assert(rom != 0);
            
     memcpy(&cart->header, rom, sizeof(ines_header_t));
-    
-	if((retcode = check_header_INES(&cart->header)) == UNIF_OK) {
+	cart->trainer = 0;
+	cart->prg_rom = 0;
+	cart->chr_rom = 0;
+    cart->version = ((cart->header.ctrl2 & 0xc) == 0x8) ? 2 : 1;
+
+	if((retcode = check_header_INES(&cart->header, cart->version)) == UNIF_OK) {
         
     	if((cart->header).ctrl1 & INES_TRAINER) {
         	trainer_size = 512;
@@ -133,26 +137,28 @@ UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart) {
 		return retcode;
 	}
 
-	if((retcode = read_header_INES(file, &(cart->header))) != UNIF_OK) {
+	if((retcode = read_header_INES(file, &cart->header)) != UNIF_OK) {
 		close_INES(file);
 		return retcode;
 	}
+	
+	cart->version = ((cart->header.ctrl2 & 0xc) == 0x8) ? 2 : 1;
 
-	retcode = check_header_INES(&(cart->header));
+	retcode = check_header_INES(&cart->header, cart->version);
 	if((retcode != UNIF_OK) && (retcode != UNIF_DIRTY_HEADER)) {
 		close_INES(file);
 		return retcode;
 	}
 
 	if(((cart->header).ctrl1 & INES_TRAINER) != 0) {
-		retcode = read_data_INES(file, &(cart->trainer), 512);
+		retcode = read_data_INES(file, &cart->trainer, 512);
 		if(retcode != UNIF_OK) {
 			close_INES(file);
 			return retcode;
 		}
 	}
 
-	retcode = read_data_INES(file, &(cart->prg_rom), ((cart->header).prg_size * 16384));
+	retcode = read_data_INES(file, &cart->prg_rom, ((cart->header).prg_size * 16384));
 	if(retcode != UNIF_OK) {
 		SAFE_FREE(cart->trainer);
 		close_INES(file);
@@ -160,7 +166,7 @@ UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart) {
 	}
 
 	if(cart->header.chr_size != 0) {
-		retcode = read_data_INES(file, &(cart->chr_rom), ((cart->header).chr_size * 8192));
+		retcode = read_data_INES(file, &cart->chr_rom, ((cart->header).chr_size * 8192));
 		if(retcode != UNIF_OK) {
 			SAFE_FREE(cart->trainer);
 			SAFE_FREE(cart->prg_rom);
@@ -168,7 +174,7 @@ UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart) {
 			return retcode;
 		}
 	}
-
+	
 	close_INES(file);
 	return retcode;
 }

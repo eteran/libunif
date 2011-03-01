@@ -88,9 +88,9 @@ UNIF_RETURN_CODE write_header_INES(FILE *file, const ines_header_t *header) {
 }
 
 /*-----------------------------------------------------------------------------
-// check_header_INES(const ines_header_t *header)
+// check_header_INES(const ines_header_t *header, int version)
 //---------------------------------------------------------------------------*/
-UNIF_RETURN_CODE check_header_INES(const ines_header_t *header) {
+UNIF_RETURN_CODE check_header_INES(const ines_header_t *header, int version) {
 
 	assert(header != 0);
 
@@ -98,8 +98,10 @@ UNIF_RETURN_CODE check_header_INES(const ines_header_t *header) {
 		return UNIF_BAD_HEADER;
 	}
 
-	if(header->final_signature != 0) {
-		return UNIF_DIRTY_HEADER;
+	if(version != 2) {
+		if(header->extended.ines1.reserved_2 != 0 || header->extended.ines1.reserved_1 != 0) {
+			return UNIF_DIRTY_HEADER;
+		}
 	}
 
 	return UNIF_OK;
