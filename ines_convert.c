@@ -498,7 +498,7 @@ void get_ines_mapper(const char *board_name, ines_info_t *info) {
 		{ "TFROM",		4, 1, 0 },		/* TFROM: MMC3B, PRG ROM, CHR ROM (64K of CHR only) */
 		{ "TGROM",		4, 0, 0 },		/* TGROM: MMC3C, PRG ROM, VRAM (512K of PRG) */
 		{ "TVROM",		4, 1, 0 },		/* TVROM: MMC3B, PRG ROM, CHR ROM, 4K of Nametable RAM (4-screen) */
-		{ "TSROM",		4, 1, 0 },		/* TSROM: MMC3A, PRG ROM, CHR ROM, 8k optionnal RAM */
+		{ "TSROM",		4, 1, 0 },		/* TSROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM */
 		{ "TQROM",		4, 0, 0 },		/* TQROM: MMC3B+74HC32, PRG ROM, CHR ROM + 8k of CHR-RAM */
 		{ "TKROM",		4, 1, 0 },		/* TKROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM (battery) */
 		{ "TLSROM",		4, 0, 0 },		/* TLSROM: Same as TLROM */
@@ -512,6 +512,7 @@ void get_ines_mapper(const char *board_name, ines_info_t *info) {
 		{ "EWROM",		5, 1, 0 },		/* EWROM: MMC5, PRG-ROM, CHR-ROM, 32k optionnal RAM (battery) */
 		{ "AOROM",		7, 1, 0 },		/* AOROM: LS161 mapper, PRG-ROM, CHR-ROM */
 		{ "PNROM",		9, 1, 0 },		/* PNROM: MMC2, PRG-ROM, CHR-ROM */
+		{ "SGROM",		1, 0, 0 },		/* SGROM: MMC1B, PRG ROM, 8k CHR-RAM */
 		{ 0, 0, 0, 0  }
 
 /*
@@ -533,7 +534,7 @@ NES-BTR: Sunsoft FME7 mapper, PRG ROM, CHR ROM, 8k optionnal RAM
 SC1ROM: MMC1B, PRG ROM, CHR ROM
 SCROM: LS161, LS02, VRAM, PRG-ROM (Similar to UNROM)
 SEROM: MMC1B, PRG ROM, CHR ROM
-SGROM: MMC1B, PRG ROM, 8k CHR RAM
+
 SKROM: MMC1B, PRG ROM, CHR ROM, 8k optional RAM (battery)
 SLROM: MMC1A, PRG ROM, CHR ROM
 SN1-ROM AW (Overlord only)
