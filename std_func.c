@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <assert.h>
 #include <stdio.h>
+#include <ctype.h>
 
 /*-----------------------------------------------------------------------------
 // Name: ask_question_yn(const char *query)
@@ -13,7 +14,6 @@
 int ask_question_yn(const char *query) {
 
 	char buffer[256];
-	char *result;
 	
 	assert(query != 0);
 
