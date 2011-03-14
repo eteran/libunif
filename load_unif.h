@@ -13,8 +13,8 @@ typedef struct {
 	uint32_t		*cck[0x10];
 	uint8_t			*prg[0x10];
 	uint8_t			*chr[0x10];
-	uint8_t			prg_pages[0x10];
-	uint8_t			chr_pages[0x10];
+	uint32_t		prg_pages[0x10];
+	uint32_t		chr_pages[0x10];
 	unif_header_t	header;
 	dumper_info_t	*dumper_info;
 	char			*mapr_name;
