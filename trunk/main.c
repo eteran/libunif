@@ -8,7 +8,7 @@
 // Name: main(int argc, char *argv[] )
 //---------------------------------------------------------------------------*/
 int main(int argc, char *argv[]) {
-	unif_cart_t dta;
+	unif_cart_t unif;
 	ines_info_t ines;
 	
 	const char *source;
@@ -24,14 +24,16 @@ int main(int argc, char *argv[]) {
 
 	make_unif_file_from_nes(dest, source);
 
-	if(load_file_UNIF(dest, &dta) != UNIF_OK) {
+	/* test loading of the file */
+	if(load_file_UNIF(dest, &unif) != UNIF_OK) {
 		fprintf(stderr, "error loading UNIF file %s\n", dest);
 		return -1;
 	}
 	
 	/* test getting info */
-	get_ines_mapper(dta.mapr_name, &ines);
-	free_file_UNIF(&dta);
+	get_ines_mapper(unif.mapr_name, &ines);
+	free_file_UNIF(&unif);
+	
 	return 0;
 }
 

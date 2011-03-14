@@ -90,7 +90,7 @@ UNIF_RETURN_CODE write_pck(FILE *file, uint8_t *prg_code, size_t size) {
 		unif_chunk_t	chunk_header_UNIF;
 		uint32_t		crc;
 
-		memcpy(chunk_header_UNIF.u.chunk_id, "PCK0", 4);
+		memcpy(chunk_header_UNIF.id, "PCK0", 4);
 		chunk_header_UNIF.length = sizeof(uint32_t);
 
 		crc = unif_crc32(prg_code, (uint32_t)size, 0);
@@ -114,7 +114,7 @@ UNIF_RETURN_CODE write_cck(FILE * file, uint8_t *chr_code, size_t size) {
 		unif_chunk_t	chunk_header_UNIF;
 		uint32_t		crc;
 
-		memcpy(chunk_header_UNIF.u.chunk_id, "CCK0", 4);
+		memcpy(chunk_header_UNIF.id, "CCK0", 4);
 		chunk_header_UNIF.length = sizeof(uint32_t);
 
 		crc = unif_crc32(chr_code, (uint32_t)size, 0);
@@ -137,7 +137,7 @@ UNIF_RETURN_CODE write_batr(FILE *file) {
 		unif_chunk_t	chunk_header_UNIF;
 		uint8_t			chunk_data = 0;
 
-		memcpy(chunk_header_UNIF.u.chunk_id, "BATR", 4);
+		memcpy(chunk_header_UNIF.id, "BATR", 4);
 		chunk_header_UNIF.length = sizeof(uint8_t);
 
 		return write_chunk_UNIF(file, &chunk_header_UNIF, &chunk_data);
@@ -158,7 +158,7 @@ UNIF_RETURN_CODE write_vror(FILE *file) {
 		unif_chunk_t	chunk_header_UNIF;
 		uint8_t			chunk_data = 0;
 
-		memcpy(chunk_header_UNIF.u.chunk_id, "VROR", 4);
+		memcpy(chunk_header_UNIF.id, "VROR", 4);
 		chunk_header_UNIF.length = sizeof(uint8_t);
 
 		return write_chunk_UNIF(file, &chunk_header_UNIF, &chunk_data);
@@ -189,7 +189,7 @@ UNIF_RETURN_CODE write_mirr(FILE *file) {
 			);	
 		
 		/* write block */
-		memcpy(chunk_header_UNIF.u.chunk_id, "MIRR", 4);
+		memcpy(chunk_header_UNIF.id, "MIRR", 4);
 		chunk_header_UNIF.length = sizeof(user_input);
 
 		return write_chunk_UNIF(file, &chunk_header_UNIF, &user_input);
@@ -208,10 +208,11 @@ UNIF_RETURN_CODE write_mapr(FILE *file) {
 
 	assert(file != 0);
 
-	memcpy(chunk_header_UNIF.u.chunk_id, "MAPR", 4);
+	memcpy(chunk_header_UNIF.id, "MAPR", 4);
 	chunk_header_UNIF.length = sizeof(board_name);
 
 	printf("%s%lu%s", "what is the board type/name? ( MAX ", sizeof(board_name), " chars ) ");
+	memset(board_name, 0, sizeof(board_name));
 	if(fgets(board_name, sizeof(board_name), stdin) == 0) {
 		return UNIF_INPUT_FAIL;	
 	}
@@ -236,6 +237,7 @@ UNIF_RETURN_CODE write_name(FILE *file) {
 		char		internal_name[0x400]; /* more than enough ?*/
 
 		printf("what is the internal name? ");
+		memset(internal_name, 0, sizeof(internal_name));
 		if(fgets(internal_name, sizeof(internal_name), stdin) == 0) {
 			return UNIF_INPUT_FAIL;	
 		}
@@ -245,7 +247,7 @@ UNIF_RETURN_CODE write_name(FILE *file) {
 			internal_name[strlen(internal_name) - 1] = '\0';
 		}
 
-		memcpy(chunk_header_UNIF.u.chunk_id, "NAME", 4);
+		memcpy(chunk_header_UNIF.id, "NAME", 4);
 		chunk_header_UNIF.length = (uint32_t)strlen(internal_name) + 1;
 
 		return write_chunk_UNIF(file, &chunk_header_UNIF, internal_name);
@@ -266,7 +268,7 @@ UNIF_RETURN_CODE write_prg(FILE * file, uint8_t *prg_code, size_t size) {
 	assert(size != 0);
 
 	/* write PRG code */
-	memcpy(chunk_header_UNIF.u.chunk_id, "PRG0", 4);
+	memcpy(chunk_header_UNIF.id, "PRG0", 4);
 	chunk_header_UNIF.length = (uint32_t)size;
 
 	return write_chunk_UNIF(file, &chunk_header_UNIF, prg_code);
@@ -283,7 +285,7 @@ UNIF_RETURN_CODE write_chr(FILE *file, uint8_t *chr_code, size_t size) {
 
 	if(size != 0) {
 		/* write CHR code */
-		memcpy(chunk_header_UNIF.u.chunk_id, "CHR0", 4);
+		memcpy(chunk_header_UNIF.id, "CHR0", 4);
 		chunk_header_UNIF.length = (uint32_t)size;
 
 		return write_chunk_UNIF(file, &chunk_header_UNIF, chr_code);
@@ -310,7 +312,7 @@ UNIF_RETURN_CODE write_tvci(FILE *file) {
 			"Does not matter" );
 		
 		/* write block */
-		memcpy(chunk_header_UNIF.u.chunk_id, "TVCI", 4);
+		memcpy(chunk_header_UNIF.id, "TVCI", 4);
 		chunk_header_UNIF.length = sizeof(user_input);
 
 		return write_chunk_UNIF(file, &chunk_header_UNIF, &user_input);
@@ -356,7 +358,7 @@ UNIF_RETURN_CODE write_ctrl(FILE *file) {
 		}
 
 		/* write block */
-		memcpy(chunk_header_UNIF.u.chunk_id, "CTRL", 4);
+		memcpy(chunk_header_UNIF.id, "CTRL", 4);
 		chunk_header_UNIF.length = sizeof(ctrl_data);
 
 		return write_chunk_UNIF(file, &chunk_header_UNIF, &ctrl_data);
@@ -376,10 +378,11 @@ UNIF_RETURN_CODE write_dinf(FILE *file) {
 	if(ask_question_yn("do you want a DINF block (y/n)? [n] ")) {
 		unif_chunk_t  	chunk_header_UNIF;
 		dumper_info_t	dinf_block;
-		char			tmp_char;
 		unsigned		tmp_num;
+		char			numeric_line[256];
 
 		printf("%s\n", "Name? ( 100 chars max ):");
+		memset(dinf_block.dumper_name, 0, sizeof(dinf_block.dumper_name));
 		if(fgets(dinf_block.dumper_name, sizeof(dinf_block.dumper_name), stdin) == 0) {
 			return UNIF_INPUT_FAIL;	
 		}
@@ -389,29 +392,50 @@ UNIF_RETURN_CODE write_dinf(FILE *file) {
 			dinf_block.dumper_name[strlen(dinf_block.dumper_name) - 1] = '\0';
 		}
 
-		printf("Day? ");
-		if(scanf("%u", &tmp_num) != 1) {
-			return UNIF_INPUT_FAIL;
-		}
+		
+		do {
+			printf("Day? ");
+			
+			if(fgets(numeric_line, sizeof(numeric_line), stdin) == 0) {
+				return UNIF_INPUT_FAIL;	
+			}
+			
+			if(sscanf(numeric_line, "%u", &tmp_num) == 1) {
+				break;
+			}
+			
+		} while(1);
 		
 		dinf_block.day = (unsigned char)tmp_num;
 
-		printf("Month? ");
-		if(scanf("%u", &tmp_num) != 1) {
-			return UNIF_INPUT_FAIL;
-		}
+		do {
+			printf("Month? ");
+			if(fgets(numeric_line, sizeof(numeric_line), stdin) == 0) {
+				return UNIF_INPUT_FAIL;	
+			}
+
+			if(sscanf(numeric_line, "%u", &tmp_num) == 1) {
+				break;
+			}
+		} while(1);
+		
 		dinf_block.month = (unsigned char)tmp_num;
 
-		printf("Year? ");
-		if(scanf("%u", &tmp_num) != 1) {
-			return UNIF_INPUT_FAIL;
-		}
+		do {
+			printf("Year? ");
+			if(fgets(numeric_line, sizeof(numeric_line), stdin) == 0) {
+				return UNIF_INPUT_FAIL;	
+			}
+			
+			if(sscanf(numeric_line, "%u", &tmp_num) == 1) {
+				break;
+			}
+		} while(1);
+		
 		dinf_block.year = (unsigned short)tmp_num;
 		
 		printf("%s\n", "Dumper Agent? ( 100 chars max ) ");
-		
-		scanf("%c", &tmp_char);
-		
+		memset(dinf_block.dumper_agent, 0, sizeof(dinf_block.dumper_agent));
 		if(fgets(dinf_block.dumper_agent, sizeof(dinf_block.dumper_agent), stdin) == 0) {
 			return UNIF_INPUT_FAIL;	
 		}
@@ -421,7 +445,7 @@ UNIF_RETURN_CODE write_dinf(FILE *file) {
 			dinf_block.dumper_agent[strlen(dinf_block.dumper_agent) - 1] = '\0';
 		}
 
-		memcpy(chunk_header_UNIF.u.chunk_id, "DINF", 4);
+		memcpy(chunk_header_UNIF.id, "DINF", 4);
 		chunk_header_UNIF.length = sizeof(dumper_info_t);
 
 		return write_chunk_UNIF(file, &chunk_header_UNIF, &dinf_block);
@@ -448,7 +472,7 @@ void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 	}
 
 	printf("source filename     - %s\n", ines_file);
-	printf("iNES mapper #       - %d\n", (cart.header.ctrl1 >> 4) | (cart.header.ctrl2 & 0xF0));
+	printf("iNES mapper #       - %d\n", (cart.header.ctrl1 >> 4) | (cart.header.ctrl2 & 0xf0));
 	printf("vertical mirroring  - %d\n", (cart.header.ctrl1 & INES_MIRROR ) != 0);
 	printf("four screen enabled - %d\n", (cart.header.ctrl1 & INES_4SCREEN) != 0);
 	printf("sram enabled        - %d\n", (cart.header.ctrl1 & INES_SRAM) != 0);

@@ -17,7 +17,6 @@ MV		= mv
 NM		= nm
 SORT		= sort
 RANLIB		= ranlib
-SYNC		= sync
 AR		= ar rc
 
 
@@ -27,8 +26,7 @@ APPNAME = libunif
 
 DEFINES =	-DNDEBUG -D`uname`
 INCLUDES =	
-FLAGS_COMMON =	-ansi -pedantic -ggdb -O2 $(INCLUDES)
-CFLAGS =      	$(FLAGS_COMMON)
+CFLAGS =      	-ansi -pedantic -W -Wall -ggdb -O2 $(INCLUDES)
 LDFLAGS =		
 
 
@@ -54,7 +52,6 @@ $(LIBRARY):	$(O_FILES)
 	@echo "linking ..."
 	@$(AR) $@ $(O_FILES) 1>/dev/null
 	-@ ($(RANLIB) $@ || true) >/dev/null 2>&1
-	$(SYNC)
 
 clean:
 	$(RM) $(O_FILES) $(APPNAME) $(LIBRARY) core *~  main.o 2> /dev/null

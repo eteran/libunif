@@ -22,7 +22,7 @@ int ask_question_yn(const char *query) {
 		printf("%s", query);
 		
 		/* get the answer */
-		if(fgets(buffer, sizeof(buffer), stdin) == NULL) {
+		if(fgets(buffer, sizeof(buffer), stdin) == 0) {
 			return 0;
 		}
 		
@@ -34,42 +34,47 @@ int ask_question_yn(const char *query) {
 		if(buffer[0] == '\n') {
 			return 0;
 		}
+		
 	} while(buffer[0] != 'y' && buffer[0] != 'n');
 	
 	return buffer[0] == 'y';
 }
 
 /*-----------------------------------------------------------------------------
-// Name: display_menu(unsigned int n_values, const char *prompt, ...)
+// Name: display_menu(unsigned int n, const char *prompt, ...)
+// Note: returns (unsigned int)-1 on error
 //---------------------------------------------------------------------------*/
-size_t display_menu(unsigned int n_values, const char *prompt, ...) {
+unsigned int display_menu(unsigned int n, const char *prompt, ...) {
 	
 	unsigned int user_selection;
+	char buffer[256];
 	
 	assert(prompt != 0);
 	
 	do {
 		va_list			var_arg;
 		unsigned int	count;
-		char			trash_data;
 
 		/* print the menu */
 		va_start(var_arg, prompt);
 
 		printf("%s\n", prompt);
 
-		for(count = 0; count < n_values; count++) {
+		for(count = 0; count < n; ++count) {
 			printf("\t%u - %s\n", count, va_arg(var_arg, const char *));
 		}
 
 		va_end(var_arg);
 		
+		if(fgets(buffer, sizeof(buffer), stdin) == 0) {
+			return (unsigned int)-1;
+		}
+		
 		/* read the user selection */
-		scanf("%u", &user_selection);
-
-		/* get rid of the return */
-		scanf("%c", &trash_data);
-	} while(user_selection >= n_values);
+		if(sscanf(buffer, "%u", &user_selection) == EOF) {
+			continue;
+		}
+	} while(user_selection >= n);
 	
 	return user_selection;
 }
