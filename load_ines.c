@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <assert.h>
 
-
 /* a macro that will free and null a pointer */
 #define SAFE_FREE(x) do { free(x); (x) = 0; } while(0)
 
@@ -213,12 +212,13 @@ UNIF_RETURN_CODE free_file_INES(ines_cart_t *cart) {
 //---------------------------------------------------------------------------*/
 INES_MIRRORING mirroring_INES(const ines_cart_t *cart) {
 	switch(cart->header.ctrl1 & 0x09) {
-	case 0x08:
 	case 0x09:
+	case 0x08:
 		return MIRR_4SCREEN;
-	case 0x00:
-		return MIRR_HORIZONTAL;
 	case 0x01:
 		return MIRR_VERTICAL;
+	case 0x00:
+	default:
+		return MIRR_HORIZONTAL;
 	}
 }
