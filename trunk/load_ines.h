@@ -47,6 +47,8 @@ UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, ines_cart_t *cart);
 UNIF_RETURN_CODE write_file_INES(const char *filename, const ines_cart_t *cart);
 
 INES_MIRRORING mirroring_INES(const ines_cart_t *cart);
+int mapper_INES(const ines_cart_t *cart);
+int submapper_INES(const ines_cart_t *cart);
 
 #ifdef __cplusplus
 }
