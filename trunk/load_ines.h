@@ -34,11 +34,19 @@ typedef struct {
 	uint8_t			version;
 } ines_cart_t;
 
+typedef enum {
+	MIRR_HORIZONTAL,
+	MIRR_VERTICAL,
+	MIRR_4SCREEN
+} INES_MIRRORING;
+
 /* some example implementations for loading and freeing a INES file */
 UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart);
 UNIF_RETURN_CODE free_file_INES(ines_cart_t *cart);
 UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, ines_cart_t *cart);
 UNIF_RETURN_CODE write_file_INES(const char *filename, const ines_cart_t *cart);
+
+INES_MIRRORING mirroring_INES(const ines_cart_t *cart);
 
 #ifdef __cplusplus
 }
