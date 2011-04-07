@@ -222,3 +222,28 @@ INES_MIRRORING mirroring_INES(const ines_cart_t *cart) {
 		return MIRR_HORIZONTAL;
 	}
 }
+
+/*-----------------------------------------------------------------------------
+// mapper_INES(const ines_cart_t *cart)
+//---------------------------------------------------------------------------*/
+int mapper_INES(const ines_cart_t *cart) {
+	
+	switch(cart->version) {
+	case 2:
+		return (((uint16_t)(cart->header.extended.ines2.byte8 & 0x0f)) << 8) | (cart->header.ctrl1 >> 4) | (cart->header.ctrl2 & 0xf0);
+	default:
+		return (cart->header.ctrl1 >> 4) | (cart->header.ctrl2 & 0xf0);
+	}
+}
+
+/*-----------------------------------------------------------------------------
+// mapper_INES(const ines_cart_t *cart)
+//---------------------------------------------------------------------------*/
+int submapper_INES(const ines_cart_t *cart) {
+	switch(cart->version) {
+	case 2:
+		return (cart->header.extended.ines2.byte8 & 0xf0) >> 4;
+	default:
+		return 0;
+	}
+}
