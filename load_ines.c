@@ -207,3 +207,18 @@ UNIF_RETURN_CODE free_file_INES(ines_cart_t *cart) {
 	SAFE_FREE(cart->chr_rom);
 	return UNIF_OK;
 }
+
+/*-----------------------------------------------------------------------------
+// mirroring_INES(const ines_cart_t *cart)
+//---------------------------------------------------------------------------*/
+INES_MIRRORING mirroring_INES(const ines_cart_t *cart) {
+	switch(cart->header.ctrl1 & 0x09) {
+	case 0x08:
+	case 0x09:
+		return MIRR_4SCREEN;
+	case 0x00:
+		return MIRR_HORIZONTAL;
+	case 0x01:
+		return MIRR_VERTICAL;
+	}
+}
