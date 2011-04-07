@@ -32,8 +32,8 @@ UNIF_RETURN_CODE write_file_INES(const char *filename, const ines_cart_t *cart) 
 	
 	UNIF_RETURN_CODE retcode = UNIF_OK;
 	FILE *file = 0;
-	const int prg_size = ((cart->header).prg_size * 16384);
-	const int chr_size = ((cart->header).chr_size * 8192);
+	const int prg_size = prg_size_INES(cart) * 16384;
+	const int chr_size = chr_size_INES(cart) * 8192;
 	
 	assert(filename != 0);
 	assert(cart != 0);
@@ -47,7 +47,7 @@ UNIF_RETURN_CODE write_file_INES(const char *filename, const ines_cart_t *cart) 
 		return retcode;
 	}
 	
-	if(((cart->header).ctrl1 & INES_TRAINER) != 0) {
+	if((cart->header.ctrl1 & INES_TRAINER) != 0) {
 		if(fwrite(cart->trainer, 512, 1, file) != 1) {
 			close_INES(file);
 			return UNIF_WRITE_FAILED;
@@ -93,17 +93,17 @@ UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, ines_cart_t *cart) {
 
 	if((retcode = check_header_INES(&cart->header, cart->version)) == UNIF_OK) {
         
-    	if((cart->header).ctrl1 & INES_TRAINER) {
+    	if(cart->header.ctrl1 & INES_TRAINER) {
         	trainer_size = 512;
     	}
 
-    	prg_size = ((cart->header).prg_size * 16384);
-    	chr_size = ((cart->header).chr_size * 8192);
+    	prg_size = prg_size_INES(cart) * 16384;
+    	chr_size = chr_size_INES(cart) * 8192;
 
     	rom += sizeof(ines_header_t);
 
-		if(((cart->header).ctrl1 & INES_TRAINER) != 0) {
-        	if(((cart->trainer) = malloc(trainer_size)) == 0) {
+		if((cart->header.ctrl1 & INES_TRAINER) != 0) {
+        	if((cart->trainer = malloc(trainer_size)) == 0) {
             	return UNIF_OUT_OF_MEMORY;
         	}
         	memcpy(cart->trainer, rom, trainer_size);
@@ -166,7 +166,7 @@ UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart) {
 		return retcode;
 	}
 
-	if(((cart->header).ctrl1 & INES_TRAINER) != 0) {
+	if((cart->header.ctrl1 & INES_TRAINER) != 0) {
 		retcode = read_data_INES(file, &cart->trainer, 512);
 		if(retcode != UNIF_OK) {
 			close_INES(file);
@@ -174,7 +174,7 @@ UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart) {
 		}
 	}
 
-	retcode = read_data_INES(file, &cart->prg_rom, ((cart->header).prg_size * 16384));
+	retcode = read_data_INES(file, &cart->prg_rom, prg_size_INES(cart) * 16384);
 	if(retcode != UNIF_OK) {
 		SAFE_FREE(cart->trainer);
 		close_INES(file);
@@ -182,7 +182,7 @@ UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart) {
 	}
 
 	if(cart->header.chr_size != 0) {
-		retcode = read_data_INES(file, &cart->chr_rom, ((cart->header).chr_size * 8192));
+		retcode = read_data_INES(file, &cart->chr_rom, chr_size_INES(cart) * 8192);
 		if(retcode != UNIF_OK) {
 			SAFE_FREE(cart->trainer);
 			SAFE_FREE(cart->prg_rom);
@@ -249,7 +249,7 @@ uint32_t submapper_INES(const ines_cart_t *cart) {
 }
 
 /*-----------------------------------------------------------------------------
-// 
+// prg_size_INES(const ines_cart_t *cart)
 //---------------------------------------------------------------------------*/
 uint32_t prg_size_INES(const ines_cart_t *cart) {
 	switch(cart->version) {
@@ -261,7 +261,7 @@ uint32_t prg_size_INES(const ines_cart_t *cart) {
 }
 
 /*-----------------------------------------------------------------------------
-// 
+// chr_size_INES(const ines_cart_t *cart)
 //---------------------------------------------------------------------------*/
 uint32_t chr_size_INES(const ines_cart_t *cart) {
 	switch(cart->version) {
