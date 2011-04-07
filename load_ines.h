@@ -50,8 +50,8 @@ UNIF_RETURN_CODE write_file_INES(const char *filename, const ines_cart_t *cart);
 INES_MIRRORING mirroring_INES(const ines_cart_t *cart);
 uint32_t mapper_INES(const ines_cart_t *cart);
 uint32_t submapper_INES(const ines_cart_t *cart);
-uint32_t prg_size(const ines_cart_t *cart);
-uint32_t chr_size(const ines_cart_t *cart);
+uint32_t prg_size_INES(const ines_cart_t *cart);
+uint32_t chr_size_INES(const ines_cart_t *cart);
 
 #ifdef __cplusplus
 }
