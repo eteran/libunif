@@ -46,9 +46,12 @@ UNIF_RETURN_CODE free_file_INES(ines_cart_t *cart);
 UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, ines_cart_t *cart);
 UNIF_RETURN_CODE write_file_INES(const char *filename, const ines_cart_t *cart);
 
+/* API access to iNES data, works with version 2.0 ROMs as well */
 INES_MIRRORING mirroring_INES(const ines_cart_t *cart);
-int mapper_INES(const ines_cart_t *cart);
-int submapper_INES(const ines_cart_t *cart);
+uint32_t mapper_INES(const ines_cart_t *cart);
+uint32_t submapper_INES(const ines_cart_t *cart);
+uint32_t prg_size(const ines_cart_t *cart);
+uint32_t chr_size(const ines_cart_t *cart);
 
 #ifdef __cplusplus
 }
