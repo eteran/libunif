@@ -584,6 +584,11 @@ TL1ROM: Same as TLROM
 	
 	
 	assert(board_name != 0);
+	assert(info != 0);
+
+	info->has_chr_rom	= 0;
+	info->ines_number	= 0;
+	info->four_screen	= 0;
 
 	for(tbl_ptr = table; tbl_ptr->board_name != 0; ++tbl_ptr) {
 		
