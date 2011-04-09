@@ -520,7 +520,7 @@ void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 /*-----------------------------------------------------------------------------
 // Name: get_ines_mapperstrSourceNES
 //---------------------------------------------------------------------------*/
-void get_ines_mapper(const char *board_name, ines_info_t *info) {
+int get_ines_mapper(const char *board_name, ines_info_t *info) {
 
 	const mapr_num_table_t *tbl_ptr = 0;
 	mapr_num_table_t table[] = {
@@ -596,9 +596,11 @@ TL1ROM: Same as TLROM
 			info->has_chr_rom	= tbl_ptr->chr_rom;
 			info->ines_number	= tbl_ptr->ines_number;
 			info->four_screen	= tbl_ptr->four_screen;
-			break;
+			return 0;
 		}
 	}
+	
+	return -1;
 }
 
 /*-----------------------------------------------------------------------------
