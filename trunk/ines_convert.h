@@ -47,7 +47,7 @@ typedef struct {
 } mapr_num_table_t;
 
 void make_unif_file_from_nes(const char *unif_file, const char *ines_file);
-void get_ines_mapper(const char *board_name, ines_info_t *info);
+int get_ines_mapper(const char *board_name, ines_info_t *info);
 CART_TYPE get_cart_type(const char *filename);
 
 UNIF_RETURN_CODE write_header(FILE *file);
