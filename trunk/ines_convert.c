@@ -525,39 +525,39 @@ int get_ines_mapper(const char *board_name, ines_info_t *info) {
 	const mapr_num_table_t *tbl_ptr = 0;
 	mapr_num_table_t table[] = {
 		/* name, ines #, chr-rom, four_screen */
-		{ "NROM",		0, 1, 0 },		/* NROM: No mapper, PRG-ROM, CHR-ROM */
-		{ "NROM-128",	0, 1, 0 },		/* NROM-128: No mapper, PRG-ROM, CHR-ROM */
-		{ "NROM-256",	0, 1, 0 },		/* NROM-256: No mapper, PRG-ROM, CHR-ROM */
-		{ "NES-RROM",	0, 1, 0 },		/* NES-RROM: Same as NROM (Only used in Clu Clu land) */
-		{ "SNROM",		1, 0, 0 },		/* SNROM: MMC1A, PRG ROM, CHR ROM/RAM ?, 8k optional RAM (battery)   */
-		{ "SOROM",		1, 0, 0 },		/* SOROM: MMC1B2, PRG ROM, VRAM, 16K of WRAM (Battery) Only 8K battery-backed */
-		{ "SGROM",		1, 0, 0 },		/* SGROM: MMC1B, PRG ROM, 8k CHR-RAM */
-		{ "SVROM",		1, 0, 0 },		/* SVROM: MMC1B2, PRG ROM, VRAM, WRAM (Battery) */
-		{ "SUROM",		1, 0, 0 },		/* SUROM: MMC1B2, PRG ROM, CHR RAM/(ROM?), 8k battery-backed RAM (DW4???) */
-		{ "SAROM",		1, 1, 0 },		/* SAROM: MMC1B, PRG ROM, CHR ROM, optional 8k of RAM (battery) */
-		{ "SBROM",		1, 1, 0 },		/* SBROM: MMC1A, PRG ROM, CHR ROM (onl 32K of CHR ROM) */
-		{ "NES-UNROM",	2, 0, 0 },		/* UNROM: 74LS32+74LS161 mapper, 128k PRG, 8k CHR-RAM */
-		{ "NES-UOROM",	2, 0, 0 },		
-		{ "CNROM",		3, 0, 0 },		/* CNROM: LS161 mapper, PRG-ROM, CHR-ROM?/CHR-RAM */
-		{ "TEROM",		4, 1, 0 },		/* TEROM: MMC3A, PRG ROM, CHR ROM, (32k ROMs) */
-		{ "TFROM",		4, 1, 0 },		/* TFROM: MMC3B, PRG ROM, CHR ROM (64K of CHR only) */
-		{ "TGROM",		4, 0, 0 },		/* TGROM: MMC3C, PRG ROM, VRAM (512K of PRG) */
-		{ "TVROM",		4, 1, 0 },		/* TVROM: MMC3B, PRG ROM, CHR ROM, 4K of Nametable RAM (4-screen) */
-		{ "TSROM",		4, 1, 0 },		/* TSROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM */
-		{ "TQROM",		4, 0, 0 },		/* TQROM: MMC3B+74HC32, PRG ROM, CHR ROM + 8k of CHR-RAM */
-		{ "NES-TKROM",	4, 1, 0 },		/* TKROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM (battery) */
-		{ "TKROM",		4, 1, 0 },		/* TKROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM (battery) */
-		{ "TLSROM",		4, 0, 0 },		/* TLSROM: Same as TLROM */
-		{ "DRROM",		4, 1, 1 },		/* DRROM: MMC3, 4K of nametable RAM (for 4-screen), PRG-ROM, CHR-ROM (only in Gauntlet) */
-		{ "TLROM",		4, 1, 0 },		/* TLROM: MMC3B, PRG ROM, CHR ROM */
-		{ "SL1ROM",		4, 1, 0 },		/* SL1ROM: MMC3, PRG ROM, CHR ROM, LS32 (for 128K 28 pin CHR ROMs) */
-		{ "SL2ROM",		4, 1, 0 },		/* SL2ROM: */
-		{ "SL3ROM",		4, 1, 0 },		/* SL3ROM: */
-		{ "ELROM",		5, 1, 0 },		/* ELROM: MMC5, PRG-ROM, CHR-ROM */
-		{ "ETROM",		5, 1, 0 },		/* ETROM: MMC5, PRG-ROM, CHR-ROM, 2x 8k optionnal RAM (battery) */
-		{ "EWROM",		5, 1, 0 },		/* EWROM: MMC5, PRG-ROM, CHR-ROM, 32k optionnal RAM (battery) */
-		{ "AOROM",		7, 1, 0 },		/* AOROM: LS161 mapper, PRG-ROM, CHR-ROM */
-		{ "PNROM",		9, 1, 0 },		/* PNROM: MMC2, PRG-ROM, CHR-ROM */
+		{ "NROM",			0, 1, 0 },		/* NROM: No mapper, PRG-ROM, CHR-ROM */
+		{ "NES-NROM-128",	0, 1, 0 },		/* NROM-128: No mapper, PRG-ROM, CHR-ROM */
+		{ "NES-NROM-256",	0, 1, 0 },		/* NROM-256: No mapper, PRG-ROM, CHR-ROM */
+		{ "NES-RROM",		0, 1, 0 },		/* NES-RROM: Same as NROM (Only used in Clu Clu land) */
+		{ "SNROM",			1, 0, 0 },		/* SNROM: MMC1A, PRG ROM, CHR ROM/RAM ?, 8k optional RAM (battery)   */
+		{ "SOROM",			1, 0, 0 },		/* SOROM: MMC1B2, PRG ROM, VRAM, 16K of WRAM (Battery) Only 8K battery-backed */
+		{ "SGROM",			1, 0, 0 },		/* SGROM: MMC1B, PRG ROM, 8k CHR-RAM */
+		{ "SVROM",			1, 0, 0 },		/* SVROM: MMC1B2, PRG ROM, VRAM, WRAM (Battery) */
+		{ "SUROM",			1, 0, 0 },		/* SUROM: MMC1B2, PRG ROM, CHR RAM/(ROM?), 8k battery-backed RAM (DW4???) */
+		{ "SAROM",			1, 1, 0 },		/* SAROM: MMC1B, PRG ROM, CHR ROM, optional 8k of RAM (battery) */
+		{ "SBROM",			1, 1, 0 },		/* SBROM: MMC1A, PRG ROM, CHR ROM (onl 32K of CHR ROM) */
+		{ "NES-UNROM",		2, 0, 0 },		/* UNROM: 74LS32+74LS161 mapper, 128k PRG, 8k CHR-RAM */
+		{ "NES-UOROM",		2, 0, 0 },		
+		{ "CNROM",			3, 0, 0 },		/* CNROM: LS161 mapper, PRG-ROM, CHR-ROM?/CHR-RAM */
+		{ "TEROM",			4, 1, 0 },		/* TEROM: MMC3A, PRG ROM, CHR ROM, (32k ROMs) */
+		{ "TFROM",			4, 1, 0 },		/* TFROM: MMC3B, PRG ROM, CHR ROM (64K of CHR only) */
+		{ "TGROM",			4, 0, 0 },		/* TGROM: MMC3C, PRG ROM, VRAM (512K of PRG) */
+		{ "TVROM",			4, 1, 0 },		/* TVROM: MMC3B, PRG ROM, CHR ROM, 4K of Nametable RAM (4-screen) */
+		{ "TSROM",			4, 1, 0 },		/* TSROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM */
+		{ "TQROM",			4, 0, 0 },		/* TQROM: MMC3B+74HC32, PRG ROM, CHR ROM + 8k of CHR-RAM */
+		{ "NES-TKROM",		4, 1, 0 },		/* TKROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM (battery) */
+		{ "TKROM",			4, 1, 0 },		/* TKROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM (battery) */
+		{ "TLSROM",			4, 0, 0 },		/* TLSROM: Same as TLROM */
+		{ "DRROM",			4, 1, 1 },		/* DRROM: MMC3, 4K of nametable RAM (for 4-screen), PRG-ROM, CHR-ROM (only in Gauntlet) */
+		{ "TLROM",			4, 1, 0 },		/* TLROM: MMC3B, PRG ROM, CHR ROM */
+		{ "SL1ROM",			4, 1, 0 },		/* SL1ROM: MMC3, PRG ROM, CHR ROM, LS32 (for 128K 28 pin CHR ROMs) */
+		{ "SL2ROM",			4, 1, 0 },		/* SL2ROM: */
+		{ "SL3ROM",			4, 1, 0 },		/* SL3ROM: */
+		{ "ELROM",			5, 1, 0 },		/* ELROM: MMC5, PRG-ROM, CHR-ROM */
+		{ "ETROM",			5, 1, 0 },		/* ETROM: MMC5, PRG-ROM, CHR-ROM, 2x 8k optionnal RAM (battery) */
+		{ "EWROM",			5, 1, 0 },		/* EWROM: MMC5, PRG-ROM, CHR-ROM, 32k optionnal RAM (battery) */
+		{ "AOROM",			7, 1, 0 },		/* AOROM: LS161 mapper, PRG-ROM, CHR-ROM */
+		{ "PNROM",			9, 1, 0 },		/* PNROM: MMC2, PRG-ROM, CHR-ROM */
 		{ 0, 0, 0, 0  }
 
 /*
