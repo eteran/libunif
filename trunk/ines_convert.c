@@ -539,16 +539,17 @@ int get_ines_mapper(const char *board_name, ines_info_t *info) {
 		{ "NES-UNROM",		2, 0, 0 },		/* UNROM: 74LS32+74LS161 mapper, 128k PRG, 8k CHR-RAM */
 		{ "NES-UOROM",		2, 0, 0 },		
 		{ "CNROM",			3, 0, 0 },		/* CNROM: LS161 mapper, PRG-ROM, CHR-ROM?/CHR-RAM */
-		{ "TEROM",			4, 1, 0 },		/* TEROM: MMC3A, PRG ROM, CHR ROM, (32k ROMs) */
-		{ "TFROM",			4, 1, 0 },		/* TFROM: MMC3B, PRG ROM, CHR ROM (64K of CHR only) */
-		{ "TGROM",			4, 0, 0 },		/* TGROM: MMC3C, PRG ROM, VRAM (512K of PRG) */
-		{ "TVROM",			4, 1, 0 },		/* TVROM: MMC3B, PRG ROM, CHR ROM, 4K of Nametable RAM (4-screen) */
-		{ "TSROM",			4, 1, 0 },		/* TSROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM */
-		{ "TQROM",			4, 0, 0 },		/* TQROM: MMC3B+74HC32, PRG ROM, CHR ROM + 8k of CHR-RAM */
+		{ "NES-TBROM",		4, 1, 0 },		
+		{ "NES-TEROM",		4, 1, 0 },		/* TEROM: MMC3A, PRG ROM, CHR ROM, (32k ROMs) */
+		{ "NES-TFROM",		4, 1, 0 },		/* TFROM: MMC3B, PRG ROM, CHR ROM (64K of CHR only) */
+		{ "NES-TGROM",		4, 0, 0 },		/* TGROM: MMC3C, PRG ROM, VRAM (512K of PRG) */
+		{ "NES-TVROM",		4, 1, 0 },		/* TVROM: MMC3B, PRG ROM, CHR ROM, 4K of Nametable RAM (4-screen) */
+		{ "NES-TSROM",		4, 1, 0 },		/* TSROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM */
+		{ "NES-TQROM",		4, 0, 0 },		/* TQROM: MMC3B+74HC32, PRG ROM, CHR ROM + 8k of CHR-RAM */
 		{ "NES-TKROM",		4, 1, 0 },		/* TKROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM (battery) */
-		{ "TKROM",			4, 1, 0 },		/* TKROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM (battery) */
-		{ "TLSROM",			4, 0, 0 },		/* TLSROM: Same as TLROM */
-		{ "DRROM",			4, 1, 1 },		/* DRROM: MMC3, 4K of nametable RAM (for 4-screen), PRG-ROM, CHR-ROM (only in Gauntlet) */
+		{ "NES-TKROM",		4, 1, 0 },		/* TKROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM (battery) */
+		{ "NES-TLSROM",		4, 0, 0 },		/* TLSROM: Same as TLROM */
+		{ "NES-DRROM",		4, 1, 1 },		/* DRROM: MMC3, 4K of nametable RAM (for 4-screen), PRG-ROM, CHR-ROM (only in Gauntlet) */
 		{ "NES-TLROM",		4, 1, 0 },		/* TLROM: MMC3B, PRG ROM, CHR ROM */
 		{ "SL1ROM",			4, 1, 0 },		/* SL1ROM: MMC3, PRG ROM, CHR ROM, LS32 (for 128K 28 pin CHR ROMs) */
 		{ "SL2ROM",			4, 1, 0 },		/* SL2ROM: */
