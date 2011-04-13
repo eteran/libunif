@@ -29,7 +29,7 @@ extern "C"{
 /* Layout of First Sixteen Bytes of NES Cartridge in iNES format*/
 typedef struct {
 	char		ines_signature[4];	/* 0x1A53454E (NES file signature) */
-	uint8_t		prg_size;			/* in 32k banks */
+	uint8_t		prg_size;			/* in 16k banks */
 	uint8_t		chr_size;			/* in 8k banks */
 	uint8_t		ctrl1;				/* %####FTBM */
 	uint8_t		ctrl2;				/* %####00PV */

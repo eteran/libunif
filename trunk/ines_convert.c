@@ -525,7 +525,7 @@ int get_ines_mapper(const char *board_name, ines_info_t *info) {
 	const mapr_num_table_t *tbl_ptr = 0;
 	mapr_num_table_t table[] = {
 		/* name, ines #, chr-rom, four_screen */
-		{ "NROM",			0, 1, 0 },		/* NROM: No mapper, PRG-ROM, CHR-ROM */
+		{ "NES-NROM",		0, 1, 0 },		/* NROM: No mapper, PRG-ROM, CHR-ROM */
 		{ "NES-NROM-128",	0, 1, 0 },		/* NROM-128: No mapper, PRG-ROM, CHR-ROM */
 		{ "NES-NROM-256",	0, 1, 0 },		/* NROM-256: No mapper, PRG-ROM, CHR-ROM */
 		{ "NES-RROM",		0, 1, 0 },		/* NES-RROM: Same as NROM (Only used in Clu Clu land) */
@@ -549,14 +549,15 @@ int get_ines_mapper(const char *board_name, ines_info_t *info) {
 		{ "TKROM",			4, 1, 0 },		/* TKROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM (battery) */
 		{ "TLSROM",			4, 0, 0 },		/* TLSROM: Same as TLROM */
 		{ "DRROM",			4, 1, 1 },		/* DRROM: MMC3, 4K of nametable RAM (for 4-screen), PRG-ROM, CHR-ROM (only in Gauntlet) */
-		{ "TLROM",			4, 1, 0 },		/* TLROM: MMC3B, PRG ROM, CHR ROM */
+		{ "NES-TLROM",		4, 1, 0 },		/* TLROM: MMC3B, PRG ROM, CHR ROM */
 		{ "SL1ROM",			4, 1, 0 },		/* SL1ROM: MMC3, PRG ROM, CHR ROM, LS32 (for 128K 28 pin CHR ROMs) */
 		{ "SL2ROM",			4, 1, 0 },		/* SL2ROM: */
 		{ "SL3ROM",			4, 1, 0 },		/* SL3ROM: */
 		{ "ELROM",			5, 1, 0 },		/* ELROM: MMC5, PRG-ROM, CHR-ROM */
 		{ "ETROM",			5, 1, 0 },		/* ETROM: MMC5, PRG-ROM, CHR-ROM, 2x 8k optionnal RAM (battery) */
 		{ "EWROM",			5, 1, 0 },		/* EWROM: MMC5, PRG-ROM, CHR-ROM, 32k optionnal RAM (battery) */
-		{ "AOROM",			7, 1, 0 },		/* AOROM: LS161 mapper, PRG-ROM, CHR-ROM */
+		{ "NES-AOROM",		7, 1, 0 },		/* AOROM: LS161 mapper, PRG-ROM, CHR-ROM */
+		{ "NES-ANROM",		7, 0, 0 },		/* ANROM: LS161+LS02 mapper, PRG-ROM, CHR-RAM */
 		{ "PNROM",			9, 1, 0 },		/* PNROM: MMC2, PRG-ROM, CHR-ROM */
 		{ 0, 0, 0, 0  }
 
@@ -567,7 +568,6 @@ int get_ines_mapper(const char *board_name, ines_info_t *info) {
 352026: TLROM (w/ LS32 for VROM enable control)
 51555: Acclaim, MMC3B mapper, PRG ROM, CHR ROM
 AMROM: LS161, VRAM, PRG-ROM
-ANROM: LS161+LS02 mapper, PRG-ROM, CHR-RAM
 BNROM: LS161, VRAM, PRG-ROM (Different LS161 bits?  Only used on Deadly Towers)
 COB:   "Glop Top" style board
 CPROM: LS04, LS08, LS161, 32K ROM, 16K VRAM (bankswitched, Videomation only)
