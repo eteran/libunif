@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2000 - 2011 Evan Teran
                           eteran@alum.rit.edu
-				   
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
@@ -28,7 +28,7 @@ extern "C"{
   typedef unsigned __int16	uint16_t;
   typedef unsigned __int32	uint32_t;
   typedef unsigned __int64	uint64_t;
-  
+
   typedef __int8			int8_t;
   typedef __int16			int16_t;
   typedef __int32			int32_t;
@@ -50,7 +50,7 @@ extern "C"{
 #elif defined(SunOS)
 	#include <sys/types.h>
 #endif
-	
+
 /* enum for return info */
 typedef enum {
 	UNIF_OK,
@@ -71,7 +71,7 @@ typedef enum {
 	UNIF_OPEN_READ,
 	UNIF_OPEN_WRITE
 } UNIF_OPEN_MODE;
- 
+
 #ifdef __cplusplus
 }
 #endif

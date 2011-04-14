@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2000 - 2011 Evan Teran
                           eteran@alum.rit.edu
-				   
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
@@ -41,7 +41,7 @@ typedef struct {
 	uint8_t			*ctrl_byte;
 	uint8_t			*batr_byte;
 	uint8_t			*vror_byte;
-	uint8_t			*mirr_data;	
+	uint8_t			*mirr_data;
 } unif_cart_t;
 
 /* some example implementations for loading and freeing a UNIF file */

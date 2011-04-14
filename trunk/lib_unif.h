@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2000 - 2011 Evan Teran
                           eteran@alum.rit.edu
-				   
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
@@ -49,13 +49,13 @@ typedef struct {
 
 /* chunk header */
 typedef struct {
-	char id[4];      /* Chunk identification string.         */			 
+	char id[4];      /* Chunk identification string.         */
 	uint32_t length; /* Data length, in little-endian format */
 } unif_chunk_t;
 
 /* handy for reading dumper info */
 typedef struct {
-	char dumper_name[100];  /* NULL-terminated string containing the name of 
+	char dumper_name[100];  /* NULL-terminated string containing the name of
 	                         * the person who dumped the cart.               */
 	unsigned char day;      /* Day of the month when cartridge was dumped    */
 	unsigned char month;	/* Month of the year when cartridge was dumped   */

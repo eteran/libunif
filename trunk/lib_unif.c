@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2000 - 2011 Evan Teran
                           eteran@alum.rit.edu
-				   
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifdef _MSC_VER
-#pragma warning( disable : 4127 ) 
+#pragma warning( disable : 4127 )
 #endif
 
 #include "lib_unif.h"
@@ -28,6 +28,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #define SAFE_FREE(x) do { free(x); (x) = 0; } while(0)
+
+/*-----------------------------------------------------------------------------
+// name: known_block_UNIF(unif_chunk_t *chunk_header)
+//---------------------------------------------------------------------------*/
+static int known_block_UNIF(unif_chunk_t *chunk_header) {
+	assert(chunk_header != 0);
+
+	if(memcmp(chunk_header->id, "DINF", 4) == 0) return 1;
+	if(memcmp(chunk_header->id, "MAPR", 4) == 0) return 1;
+	if(memcmp(chunk_header->id, "READ", 4) == 0) return 1;
+	if(memcmp(chunk_header->id, "NAME", 4) == 0) return 1;
+	if(memcmp(chunk_header->id, "TVCI", 4) == 0) return 1;
+	if(memcmp(chunk_header->id, "CTRL", 4) == 0) return 1;
+	if(memcmp(chunk_header->id, "BATR", 4) == 0) return 1;
+	if(memcmp(chunk_header->id, "VROR", 4) == 0) return 1;
+	if(memcmp(chunk_header->id, "MIRR", 4) == 0) return 1;
+	if((memcmp(chunk_header->id, "PRG", 3) == 0) && strchr("0123456789ABCDEF", chunk_header->id[3]) != NULL) return 1;
+	if((memcmp(chunk_header->id, "CHR", 3) == 0) && strchr("0123456789ABCDEF", chunk_header->id[3]) != NULL) return 1;
+	if((memcmp(chunk_header->id, "PCK", 3) == 0) && strchr("0123456789ABCDEF", chunk_header->id[3]) != NULL) return 1;
+	if((memcmp(chunk_header->id, "CCK", 3) == 0) && strchr("0123456789ABCDEF", chunk_header->id[3]) != NULL) return 1;
+	return 0;	
+}
 
 /*-----------------------------------------------------------------------------
 // name: open_UNIF(const char *filename, FILE **file, UNIF_OPEN_MODE mode)
@@ -41,19 +63,19 @@ UNIF_RETURN_CODE open_UNIF(const char *filename, FILE **file, UNIF_OPEN_MODE mod
 	/* open the file */
 	if(mode == UNIF_OPEN_READ)	*file = fopen(filename, "rb");
 	else						*file = fopen(filename, "wb");
-		
+
 	/* check if successful */
 	if(*file == 0) {
 		return UNIF_OPEN_FAILED;
 	}
-		
+
 	return UNIF_OK;
 }
 
 /*-----------------------------------------------------------------------------
 // name: check_header_UNIF(unif_header_t *header)
 //---------------------------------------------------------------------------*/
-UNIF_RETURN_CODE check_header_UNIF(unif_header_t *header) {	
+UNIF_RETURN_CODE check_header_UNIF(unif_header_t *header) {
 
 	/* check pointers */
 	assert(header != 0);
@@ -67,11 +89,11 @@ UNIF_RETURN_CODE check_header_UNIF(unif_header_t *header) {
 	if(header->revision > UNIF_REVISION) {
 		return UNIF_BAD_REVISION_NUMBER;
 	}
-		
+
 	/* make sure reserved space is all zeros */
 	if(memcmp(
-			header->expansion, 
-			"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 
+			header->expansion,
+			"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0",
 			sizeof(header->expansion)
 			)) {
 		return UNIF_DIRTY_HEADER;
@@ -104,7 +126,7 @@ UNIF_RETURN_CODE read_header_UNIF(FILE *file, unif_header_t *header) {
 	/* check pointers */
 	assert(file != 0);
 	assert(header != 0);
-	
+
 	/* header is ALWAYS at begining of file */
 	rewind(file);
 
@@ -156,6 +178,13 @@ UNIF_RETURN_CODE read_chunk_UNIF(FILE *file, unif_chunk_t *chunk_header, void **
 		return UNIF_READ_FAILED;
 	}
 	
+	/* we saw something we completely don't understand as a UNIF header, 
+	 * just consider it to be EOF 
+	 */
+	if(!known_block_UNIF(chunk_header)) {
+		return UNIF_END_OF_FILE;
+	}
+
 	/* allocate memory for the chunk data */
 	*chunk_data = malloc(chunk_header->length);
 	if(*chunk_data == 0) {
@@ -222,6 +251,6 @@ const char *get_error_string_UNIF(UNIF_RETURN_CODE code) {
 		return "could not write to file";
     default:
 		return "unknown error";
-    }	
+    }
 }
 

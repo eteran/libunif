@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2000 - 2011 Evan Teran
                           eteran@alum.rit.edu
-				   
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifdef _MSC_VER
-#pragma warning( disable : 4127 ) 
+#pragma warning( disable : 4127 )
 #endif
 
 #include "load_unif.h"
@@ -32,18 +32,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // name: load_file_UNIF(const char *filename, unif_cart_t *cart)
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE load_file_UNIF(const char *filename, unif_cart_t *cart) {
-	FILE *unif_file = 0;	
+	FILE *unif_file = 0;
 	UNIF_RETURN_CODE ret_val;
-	
+
 	assert(cart != 0);
 	assert(filename != 0);
-	
+
 	/* clear out out structure we use to store file info */
 	memset(cart, 0, sizeof(unif_cart_t));
 
 	/* open the file */
 	ret_val = open_UNIF(filename, &unif_file, UNIF_OPEN_READ);
-	
+
 	if(ret_val == UNIF_OK) {
 
 		/* read the header */
@@ -64,14 +64,14 @@ UNIF_RETURN_CODE load_file_UNIF(const char *filename, unif_cart_t *cart) {
 		/* as long as we dont have an error, proccess tags */
 		while(ret_val == UNIF_OK) {
 			unif_chunk_t chunk_hdr	= { "", 0 };
-			
+
 			union {
 				void 			*ptr;
 				uint8_t			*ptr8;
 				uint32_t		*ptr32;
 				char			*str;
 			} chunk_data = { 0 };
-			
+
 			ret_val = read_chunk_UNIF(unif_file, &chunk_hdr, &chunk_data.ptr);
 
 			/* did we hit the end of the file? */
@@ -80,7 +80,7 @@ UNIF_RETURN_CODE load_file_UNIF(const char *filename, unif_cart_t *cart) {
 
 			/* if the read was ok, store it */
 			if(ret_val == UNIF_OK) {
-			
+
 				if(memcmp(chunk_hdr.id, "DINF", 4) == 0) {
 					cart->dumper_info = chunk_data.ptr;
 				} else if(memcmp(chunk_hdr.id, "MAPR", 4) == 0) {
@@ -99,13 +99,13 @@ UNIF_RETURN_CODE load_file_UNIF(const char *filename, unif_cart_t *cart) {
 					cart->vror_byte = chunk_data.ptr8;
 				} else if(memcmp(chunk_hdr.id, "MIRR", 4) == 0) {
 					cart->mirr_data = chunk_data.ptr8;
-					
+
 				} else if(memcmp(chunk_hdr.id, "PRG", 3) == 0) {
 					switch(chunk_hdr.id[3]) {
 					case '0':
 						cart->prg[0x00] = chunk_data.ptr8;
 						cart->prg_pages[0x00] = (chunk_hdr.length >> 14);
-						break;			
+						break;
 					case '1':
 						cart->prg[0x01] = chunk_data.ptr8;
 						cart->prg_pages[0x01] = (chunk_hdr.length >> 14);
@@ -174,7 +174,7 @@ UNIF_RETURN_CODE load_file_UNIF(const char *filename, unif_cart_t *cart) {
 					case '0':
 						cart->chr[0x00] = chunk_data.ptr8;
 						cart->chr_pages[0x00] = (chunk_hdr.length >> 13);
-						break;			
+						break;
 					case '1':
 						cart->chr[0x01] = chunk_data.ptr8;
 						cart->chr_pages[0x01] = (chunk_hdr.length >> 13);
@@ -301,9 +301,9 @@ UNIF_RETURN_CODE load_file_UNIF(const char *filename, unif_cart_t *cart) {
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE free_file_UNIF(unif_cart_t *cart) {
 	size_t i;
-	
+
 	assert(cart != 0);
-	
+
 	SAFE_FREE(cart->mapr_name);
 	SAFE_FREE(cart->dumper_info);
 	SAFE_FREE(cart->read_text);
@@ -318,10 +318,10 @@ UNIF_RETURN_CODE free_file_UNIF(unif_cart_t *cart) {
 	for(i = 0; i < 0x10; i++) {
 		SAFE_FREE(cart->prg[i]);
 		SAFE_FREE(cart->pck[i]);
-		SAFE_FREE(cart->chr[i]);		
+		SAFE_FREE(cart->chr[i]);
 		SAFE_FREE(cart->cck[i]);
 	}
-	
+
 	return UNIF_OK;
 }
 

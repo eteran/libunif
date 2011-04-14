@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2000 - 2011 Evan Teran
                           eteran@alum.rit.edu
-				   
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
@@ -37,10 +37,10 @@ Tags not supprted yet in conversion
 //----------------------------------------------------------------------------*/
 int unif_strncasecmp(const char *s1, const char *s2, size_t n) {
 	int ret = 0;
-	
+
 	assert(s1 != 0);
 	assert(s2 != 0);
-	
+
 	while(!ret && (*s1 || *s2) && n--) {
 		const char cs1 = (const char)tolower(*s1);
 		const char cs2 = (const char)tolower(*s2);
@@ -55,7 +55,7 @@ int unif_strncasecmp(const char *s1, const char *s2, size_t n) {
 // Name: write_header(FILE *file)
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_header(FILE *file) {
-	
+
 	unif_header_t hdr;
 	assert(file != 0);
 
@@ -84,9 +84,9 @@ UNIF_RETURN_CODE write_read(FILE *file){
 	assert(file != 0);
 
 	(void)file;
-	
+
 	if(ask_question_yn("do you want a READ block (y/n)? [n]")) {
-#ifndef ENABLE_READ	
+#ifndef ENABLE_READ
 		printf("%s\n", "Temporarily disabled");
 #endif
 	}
@@ -97,8 +97,8 @@ UNIF_RETURN_CODE write_read(FILE *file){
 /*-----------------------------------------------------------------------------
 // Name: write_pck(FILE *file, uint8_t  *prg_code, size_t size)
 //---------------------------------------------------------------------------*/
-UNIF_RETURN_CODE write_pck(FILE *file, uint8_t *prg_code, size_t size) {	
-	
+UNIF_RETURN_CODE write_pck(FILE *file, uint8_t *prg_code, size_t size) {
+
 	assert(file != 0);
 	assert(prg_code != 0);
 	assert(size != 0);
@@ -122,7 +122,7 @@ UNIF_RETURN_CODE write_pck(FILE *file, uint8_t *prg_code, size_t size) {
 // Name: write_cck(FILE * file, uint8_t *chr_code, size_t size)
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_cck(FILE * file, uint8_t *chr_code, size_t size) {
-	
+
 	assert(file != 0);
 	assert(chr_code != 0);
 	assert(size != 0);
@@ -147,7 +147,7 @@ UNIF_RETURN_CODE write_cck(FILE * file, uint8_t *chr_code, size_t size) {
 // Name: write_batr(FILE *file)
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_batr(FILE *file) {
-	
+
 	assert(file != 0);
 
 	if(ask_question_yn("does this rom have a battery backup (y/n)? [n] ")) {
@@ -168,7 +168,7 @@ UNIF_RETURN_CODE write_batr(FILE *file) {
 // Name: write_vror(FILE *file)
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_vror(FILE *file) {
-	
+
 	assert(file != 0);
 
 	if(ask_question_yn("enable VRAM Override (y/n)? [n] ")) {
@@ -188,23 +188,23 @@ UNIF_RETURN_CODE write_vror(FILE *file) {
 // Name: write_mirr(FILE *file)
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_mirr(FILE *file) {
-	
+
 	assert(file != 0);
 
 	if(ask_question_yn("do you want a MIRR block (y/n)? [n] ")) {
 		unif_chunk_t  chunk_header_UNIF;
 
-		size_t user_input = display_menu( 
+		size_t user_input = display_menu(
 			6,												/* numer of items */
 			"Please select mirroring type: (0,1,2,3,4,5)",	/* prompt */
 			"Horizontal Mirroring (Hard Wired)",			/* options */
-			"Vertical Mirroring (Hard Wired)", 
+			"Vertical Mirroring (Hard Wired)",
 			"Mirror All Pages From $2000 (Hard Wired)",
 			"Mirror All Pages From $2400 (Hard Wired)",
 			"Four Screens of VRAM (Hard Wired)",
 			"Mirroring Controlled By Mapper Hardware"
-			);	
-		
+			);
+
 		/* write block */
 		memcpy(chunk_header_UNIF.id, "MIRR", 4);
 		chunk_header_UNIF.length = sizeof(user_input);
@@ -219,7 +219,7 @@ UNIF_RETURN_CODE write_mirr(FILE *file) {
 // Name: write_mapr(FILE *file)
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_mapr(FILE *file) {
-	
+
 	unif_chunk_t	chunk_header_UNIF;
 	char			board_name[64];
 
@@ -231,14 +231,14 @@ UNIF_RETURN_CODE write_mapr(FILE *file) {
 	printf("%s%lu%s", "what is the board type/name? ( MAX ", sizeof(board_name), " chars ) ");
 	memset(board_name, 0, sizeof(board_name));
 	if(fgets(board_name, sizeof(board_name), stdin) == 0) {
-		return UNIF_INPUT_FAIL;	
+		return UNIF_INPUT_FAIL;
 	}
 
 	/* eliminate new line */
 	if(board_name[strlen(board_name) - 1] == '\n') {
 		board_name[strlen(board_name) - 1] = '\0';
 	}
-	
+
 	return write_chunk_UNIF(file, &chunk_header_UNIF, board_name);
 }
 
@@ -246,7 +246,7 @@ UNIF_RETURN_CODE write_mapr(FILE *file) {
 // Name: write_name(FILE *file)
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_name(FILE *file) {
-	
+
 	assert(file != 0);
 
 	if(ask_question_yn("do you want an internal ROM name (y/n)? [n] ")) {
@@ -256,7 +256,7 @@ UNIF_RETURN_CODE write_name(FILE *file) {
 		printf("what is the internal name? ");
 		memset(internal_name, 0, sizeof(internal_name));
 		if(fgets(internal_name, sizeof(internal_name), stdin) == 0) {
-			return UNIF_INPUT_FAIL;	
+			return UNIF_INPUT_FAIL;
 		}
 
 		/* eliminate new line */
@@ -277,7 +277,7 @@ UNIF_RETURN_CODE write_name(FILE *file) {
 // Name: write_prg(FILE *file, uint8_t *prg_code, size_t size)
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_prg(FILE * file, uint8_t *prg_code, size_t size) {
-	
+
 	unif_chunk_t chunk_header_UNIF;
 
 	assert(file != 0);
@@ -295,7 +295,7 @@ UNIF_RETURN_CODE write_prg(FILE * file, uint8_t *prg_code, size_t size) {
 // Name: write_chr(FILE *file, uint8_t *chr_code, size_t size)
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_chr(FILE *file, uint8_t *chr_code, size_t size) {
-	
+
 	unif_chunk_t chunk_header_UNIF;
 
 	assert(file != 0);
@@ -321,13 +321,13 @@ UNIF_RETURN_CODE write_tvci(FILE *file) {
 	if(ask_question_yn("do you want a TVCI block (y/n)? [n] ")) {
 		unif_chunk_t chunk_header_UNIF;
 
-		size_t user_input = display_menu( 
+		size_t user_input = display_menu(
 			3,											/* numer of items */
 			"Please select TV compatibility: (0,1,2)",	/* prompt */
 			"Originally NTSC cartridge",				/* options */
-			"Originally PAL cartridge", 
+			"Originally PAL cartridge",
 			"Does not matter" );
-		
+
 		/* write block */
 		memcpy(chunk_header_UNIF.id, "TVCI", 4);
 		chunk_header_UNIF.length = sizeof(user_input);
@@ -389,7 +389,7 @@ UNIF_RETURN_CODE write_ctrl(FILE *file) {
 // Name: write_dinf(FILE *file)
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_dinf(FILE *file) {
-	
+
 	assert(file != 0);
 
 	if(ask_question_yn("do you want a DINF block (y/n)? [n] ")) {
@@ -401,60 +401,60 @@ UNIF_RETURN_CODE write_dinf(FILE *file) {
 		printf("%s\n", "Name? ( 100 chars max ):");
 		memset(dinf_block.dumper_name, 0, sizeof(dinf_block.dumper_name));
 		if(fgets(dinf_block.dumper_name, sizeof(dinf_block.dumper_name), stdin) == 0) {
-			return UNIF_INPUT_FAIL;	
+			return UNIF_INPUT_FAIL;
 		}
-		
+
 		/* eliminate new line */
 		if(dinf_block.dumper_name[strlen(dinf_block.dumper_name) - 1] == '\n') {
 			dinf_block.dumper_name[strlen(dinf_block.dumper_name) - 1] = '\0';
 		}
 
-		
+
 		do {
 			printf("Day? ");
-			
+
 			if(fgets(numeric_line, sizeof(numeric_line), stdin) == 0) {
-				return UNIF_INPUT_FAIL;	
+				return UNIF_INPUT_FAIL;
 			}
-			
+
 			if(sscanf(numeric_line, "%u", &tmp_num) == 1) {
 				break;
 			}
-			
+
 		} while(1);
-		
+
 		dinf_block.day = (unsigned char)tmp_num;
 
 		do {
 			printf("Month? ");
 			if(fgets(numeric_line, sizeof(numeric_line), stdin) == 0) {
-				return UNIF_INPUT_FAIL;	
+				return UNIF_INPUT_FAIL;
 			}
 
 			if(sscanf(numeric_line, "%u", &tmp_num) == 1) {
 				break;
 			}
 		} while(1);
-		
+
 		dinf_block.month = (unsigned char)tmp_num;
 
 		do {
 			printf("Year? ");
 			if(fgets(numeric_line, sizeof(numeric_line), stdin) == 0) {
-				return UNIF_INPUT_FAIL;	
+				return UNIF_INPUT_FAIL;
 			}
-			
+
 			if(sscanf(numeric_line, "%u", &tmp_num) == 1) {
 				break;
 			}
 		} while(1);
-		
+
 		dinf_block.year = (unsigned short)tmp_num;
-		
+
 		printf("%s\n", "Dumper Agent? ( 100 chars max ) ");
 		memset(dinf_block.dumper_agent, 0, sizeof(dinf_block.dumper_agent));
 		if(fgets(dinf_block.dumper_agent, sizeof(dinf_block.dumper_agent), stdin) == 0) {
-			return UNIF_INPUT_FAIL;	
+			return UNIF_INPUT_FAIL;
 		}
 
 		/* eliminate new line */
@@ -476,12 +476,12 @@ UNIF_RETURN_CODE write_dinf(FILE *file) {
 //---------------------------------------------------------------------------*/
 void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 
-	FILE *file_dest = 0;	
+	FILE *file_dest = 0;
 	ines_cart_t cart;
-	
+
 	assert(unif_file != 0);
 	assert(ines_file != 0);
-	
+
 	/* read the source .nes file */
 	if(load_file_INES(ines_file, &cart) != UNIF_OK) {
 		printf("error loading iNES file\n");
@@ -494,7 +494,7 @@ void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 	printf("four screen enabled - %d\n", (cart.header.ctrl1 & INES_4SCREEN) != 0);
 	printf("sram enabled        - %d\n", (cart.header.ctrl1 & INES_SRAM) != 0);
 	printf("trainer present     - %d\n", (cart.header.ctrl1 & INES_TRAINER) != 0);
-	
+
 	open_UNIF(unif_file, &file_dest, UNIF_OPEN_WRITE);
 
 	write_header(file_dest);
@@ -503,15 +503,15 @@ void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 	write_mirr(file_dest);
 	write_ctrl(file_dest);
 	write_tvci(file_dest);
-	write_read(file_dest);  
+	write_read(file_dest);
 	write_batr(file_dest);
-	write_vror(file_dest);  
+	write_vror(file_dest);
 	write_dinf(file_dest);
 	write_prg(file_dest, cart.prg_rom, cart.header.prg_size << 14);
 	write_pck(file_dest, cart.prg_rom, cart.header.prg_size << 14);
 	write_chr(file_dest, cart.chr_rom, cart.header.chr_size << 13);
 	write_cck(file_dest, cart.chr_rom, cart.header.chr_size << 13);
-	
+
 	close_UNIF(file_dest);
 	free_file_INES(&cart);
 }
@@ -525,41 +525,43 @@ int get_ines_mapper(const char *board_name, ines_info_t *info) {
 	const mapr_num_table_t *tbl_ptr = 0;
 	mapr_num_table_t table[] = {
 		/* name, ines #, chr-rom, four_screen */
-		{ "NES-NROM",		0, 1, 0 },		/* NROM: No mapper, PRG-ROM, CHR-ROM */
-		{ "NES-NROM-128",	0, 1, 0 },		/* NROM-128: No mapper, PRG-ROM, CHR-ROM */
-		{ "NES-NROM-256",	0, 1, 0 },		/* NROM-256: No mapper, PRG-ROM, CHR-ROM */
-		{ "NES-RROM",		0, 1, 0 },		/* NES-RROM: Same as NROM (Only used in Clu Clu land) */
-		{ "SNROM",			1, 0, 0 },		/* SNROM: MMC1A, PRG ROM, CHR ROM/RAM ?, 8k optional RAM (battery)   */
-		{ "SOROM",			1, 0, 0 },		/* SOROM: MMC1B2, PRG ROM, VRAM, 16K of WRAM (Battery) Only 8K battery-backed */
-		{ "SGROM",			1, 0, 0 },		/* SGROM: MMC1B, PRG ROM, 8k CHR-RAM */
-		{ "SVROM",			1, 0, 0 },		/* SVROM: MMC1B2, PRG ROM, VRAM, WRAM (Battery) */
-		{ "SUROM",			1, 0, 0 },		/* SUROM: MMC1B2, PRG ROM, CHR RAM/(ROM?), 8k battery-backed RAM (DW4???) */
-		{ "SAROM",			1, 1, 0 },		/* SAROM: MMC1B, PRG ROM, CHR ROM, optional 8k of RAM (battery) */
-		{ "SBROM",			1, 1, 0 },		/* SBROM: MMC1A, PRG ROM, CHR ROM (onl 32K of CHR ROM) */
-		{ "NES-UNROM",		2, 0, 0 },		/* UNROM: 74LS32+74LS161 mapper, 128k PRG, 8k CHR-RAM */
-		{ "NES-UOROM",		2, 0, 0 },		
-		{ "CNROM",			3, 0, 0 },		/* CNROM: LS161 mapper, PRG-ROM, CHR-ROM?/CHR-RAM */
-		{ "NES-TBROM",		4, 1, 0 },		
-		{ "NES-TEROM",		4, 1, 0 },		/* TEROM: MMC3A, PRG ROM, CHR ROM, (32k ROMs) */
-		{ "NES-TFROM",		4, 1, 0 },		/* TFROM: MMC3B, PRG ROM, CHR ROM (64K of CHR only) */
-		{ "NES-TGROM",		4, 0, 0 },		/* TGROM: MMC3C, PRG ROM, VRAM (512K of PRG) */
-		{ "NES-TVROM",		4, 1, 0 },		/* TVROM: MMC3B, PRG ROM, CHR ROM, 4K of Nametable RAM (4-screen) */
-		{ "NES-TSROM",		4, 1, 0 },		/* TSROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM */
-		{ "NES-TQROM",		4, 0, 0 },		/* TQROM: MMC3B+74HC32, PRG ROM, CHR ROM + 8k of CHR-RAM */
-		{ "NES-TKROM",		4, 1, 0 },		/* TKROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM (battery) */
-		{ "NES-TKROM",		4, 1, 0 },		/* TKROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM (battery) */
-		{ "NES-TLSROM",		4, 0, 0 },		/* TLSROM: Same as TLROM */
-		{ "NES-DRROM",		4, 1, 1 },		/* DRROM: MMC3, 4K of nametable RAM (for 4-screen), PRG-ROM, CHR-ROM (only in Gauntlet) */
-		{ "NES-TLROM",		4, 1, 0 },		/* TLROM: MMC3B, PRG ROM, CHR ROM */
-		{ "SL1ROM",			4, 1, 0 },		/* SL1ROM: MMC3, PRG ROM, CHR ROM, LS32 (for 128K 28 pin CHR ROMs) */
-		{ "SL2ROM",			4, 1, 0 },		/* SL2ROM: */
-		{ "SL3ROM",			4, 1, 0 },		/* SL3ROM: */
-		{ "ELROM",			5, 1, 0 },		/* ELROM: MMC5, PRG-ROM, CHR-ROM */
-		{ "ETROM",			5, 1, 0 },		/* ETROM: MMC5, PRG-ROM, CHR-ROM, 2x 8k optionnal RAM (battery) */
-		{ "EWROM",			5, 1, 0 },		/* EWROM: MMC5, PRG-ROM, CHR-ROM, 32k optionnal RAM (battery) */
-		{ "NES-AOROM",		7, 1, 0 },		/* AOROM: LS161 mapper, PRG-ROM, CHR-ROM */
-		{ "NES-ANROM",		7, 0, 0 },		/* ANROM: LS161+LS02 mapper, PRG-ROM, CHR-RAM */
-		{ "PNROM",			9, 1, 0 },		/* PNROM: MMC2, PRG-ROM, CHR-ROM */
+		{ "NES-NROM",     0, 1, 0 }, /* NROM: No mapper, PRG-ROM, CHR-ROM */
+		{ "UNL-SA-NROM",  0, 1, 0 }, 
+		{ "NES-NROM-128", 0, 1, 0 }, /* NROM-128: No mapper, PRG-ROM, CHR-ROM */
+		{ "NES-NROM-256", 0, 1, 0 }, /* NROM-256: No mapper, PRG-ROM, CHR-ROM */
+		{ "NES-RROM",     0, 1, 0 }, /* NES-RROM: Same as NROM (Only used in Clu Clu land) */
+		{ "NES-SNROM",    1, 0, 0 }, /* SNROM: MMC1A, PRG ROM, CHR ROM/RAM ?, 8k optional RAM (battery)   */
+		{ "NES-SOROM",    1, 0, 0 }, /* SOROM: MMC1B2, PRG ROM, VRAM, 16K of WRAM (Battery) Only 8K battery-backed */
+		{ "NES-SGROM",    1, 0, 0 }, /* SGROM: MMC1B, PRG ROM, 8k CHR-RAM */
+		{ "NES-SVROM",    1, 0, 0 }, /* SVROM: MMC1B2, PRG ROM, VRAM, WRAM (Battery) */
+		{ "NES-SUROM",    1, 0, 0 }, /* SUROM: MMC1B2, PRG ROM, CHR RAM/(ROM?), 8k battery-backed RAM (DW4???) */
+		{ "NES-SAROM",    1, 1, 0 }, /* SAROM: MMC1B, PRG ROM, CHR ROM, optional 8k of RAM (battery) */
+		{ "NES-SBROM",    1, 1, 0 }, /* SBROM: MMC1A, PRG ROM, CHR ROM (onl 32K of CHR ROM) */
+		{ "NES-UNROM",    2, 0, 0 }, /* UNROM: 74LS32+74LS161 mapper, 128k PRG, 8k CHR-RAM */
+		{ "NES-UOROM",    2, 0, 0 },
+		{ "NES-CNROM",    3, 0, 0 }, /* CNROM: LS161 mapper, PRG-ROM, CHR-ROM?/CHR-RAM */
+		{ "NES-TBROM",    4, 1, 0 },
+		{ "NES-TEROM",    4, 1, 0 }, /* TEROM: MMC3A, PRG ROM, CHR ROM, (32k ROMs) */
+		{ "NES-TFROM",    4, 1, 0 }, /* TFROM: MMC3B, PRG ROM, CHR ROM (64K of CHR only) */
+		{ "NES-TGROM",    4, 0, 0 }, /* TGROM: MMC3C, PRG ROM, VRAM (512K of PRG) */
+		{ "NES-TVROM",    4, 1, 0 }, /* TVROM: MMC3B, PRG ROM, CHR ROM, 4K of Nametable RAM (4-screen) */
+		{ "NES-TSROM",    4, 1, 0 }, /* TSROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM */
+		{ "NES-TQROM",    4, 0, 0 }, /* TQROM: MMC3B+74HC32, PRG ROM, CHR ROM + 8k of CHR-RAM */
+		{ "NES-TKROM",    4, 1, 0 }, /* TKROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM (battery) */
+		{ "NES-TKROM",    4, 1, 0 }, /* TKROM: MMC3A, PRG ROM, CHR ROM, 8k optional RAM (battery) */
+		{ "NES-TLSROM",   4, 0, 0 }, /* TLSROM: Same as TLROM */
+		{ "NES-DRROM",    4, 1, 1 }, /* DRROM: MMC3, 4K of nametable RAM (for 4-screen), PRG-ROM, CHR-ROM (only in Gauntlet) */
+		{ "NES-TLROM",    4, 1, 0 }, /* TLROM: MMC3B, PRG ROM, CHR ROM */
+		{ "NES-SLROM",    4, 1, 0 }, /* SLROM: MMC1A, PRG ROM, CHR ROM */
+		{ "NES-SL1ROM",   4, 1, 0 }, /* SL1ROM: MMC3, PRG ROM, CHR ROM, LS32 (for 128K 28 pin CHR ROMs) */
+		{ "NES-SL2ROM",   4, 1, 0 }, /* SL2ROM: */
+		{ "NES-SL3ROM",   4, 1, 0 }, /* SL3ROM: */
+		{ "ELROM",        5, 1, 0 }, /* ELROM: MMC5, PRG-ROM, CHR-ROM */
+		{ "ETROM",        5, 1, 0 }, /* ETROM: MMC5, PRG-ROM, CHR-ROM, 2x 8k optionnal RAM (battery) */
+		{ "EWROM",        5, 1, 0 }, /* EWROM: MMC5, PRG-ROM, CHR-ROM, 32k optionnal RAM (battery) */
+		{ "NES-AOROM",    7, 1, 0 }, /* AOROM: LS161 mapper, PRG-ROM, CHR-ROM */
+		{ "NES-ANROM",    7, 0, 0 }, /* ANROM: LS161+LS02 mapper, PRG-ROM, CHR-RAM */
+		{ "PNROM",        9, 1, 0 }, /* PNROM: MMC2, PRG-ROM, CHR-ROM */
 		{ 0, 0, 0, 0  }
 
 /*
@@ -576,18 +578,17 @@ GNROM: LS161 mapper, PRG ROM, CHR ROM
 HKROM: MMC6B, PRG-ROM, CHR-ROM, Battery
 MHROM: LS161 mapper, black blob chips. Mario Bros / Duck Hunt multi
 NES-B4: Same as TLROM
-NES-BTR: Sunsoft FME7 mapper, PRG ROM, CHR ROM, 8k optionnal RAM 
+NES-BTR: Sunsoft FME7 mapper, PRG ROM, CHR ROM, 8k optionnal RAM
 SC1ROM: MMC1B, PRG ROM, CHR ROM
 SCROM: LS161, LS02, VRAM, PRG-ROM (Similar to UNROM)
 SEROM: MMC1B, PRG ROM, CHR ROM
 SKROM: MMC1B, PRG ROM, CHR ROM, 8k optional RAM (battery)
-SLROM: MMC1A, PRG ROM, CHR ROM
 SN1-ROM AW (Overlord only)
 TL1ROM: Same as TLROM
 */
 	};
-	
-	
+
+
 	assert(board_name != 0);
 	assert(info != 0);
 
@@ -596,7 +597,7 @@ TL1ROM: Same as TLROM
 	info->four_screen	= 0;
 
 	for(tbl_ptr = table; tbl_ptr->board_name != 0; ++tbl_ptr) {
-		
+
 		if(unif_strncasecmp(board_name, tbl_ptr->board_name, 32) == 0) {
 			info->has_chr_rom	= tbl_ptr->chr_rom;
 			info->ines_number	= tbl_ptr->ines_number;
@@ -604,7 +605,7 @@ TL1ROM: Same as TLROM
 			return 0;
 		}
 	}
-	
+
 	return -1;
 }
 
@@ -616,10 +617,10 @@ CART_TYPE get_cart_type(const char *filename) {
     	ines_header_t ines_header;
     	unif_header_t unif_header;
     } headers;
-	
+
 	FILE *file = fopen(filename, "rb");
 	UNIF_RETURN_CODE ret = UNIF_BAD_HEADER;
-    
+
 	/* header is ALWAYS at begining of file */
 	fseek(file, 0, SEEK_SET);
 

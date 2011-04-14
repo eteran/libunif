@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2000 - 2011 Evan Teran
                           eteran@alum.rit.edu
-				   
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
@@ -33,7 +33,7 @@ typedef struct {
 	uint8_t		chr_size;			/* in 8k banks */
 	uint8_t		ctrl1;				/* %####FTBM */
 	uint8_t		ctrl2;				/* %####00PV */
-	
+
 	/* in iNES 2.0, these mean something, otherwise, should be 0 */
 	union {
 		struct ines2_t {
@@ -44,9 +44,9 @@ typedef struct {
 			uint8_t byte12;	/* %xxxxxxBP */
 			uint8_t byte13;	/* %MMMMPPPP */
 			uint8_t byte14;
-			uint8_t byte15;	
+			uint8_t byte15;
 		} ines2;
-		
+
 		struct ines1_t {
 			uint32_t reserved_1;
 			uint32_t reserved_2;
