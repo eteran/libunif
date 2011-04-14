@@ -478,6 +478,7 @@ void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 
 	FILE *file_dest = 0;
 	ines_cart_t cart;
+	INES_MIRRORING mirroring;
 
 	assert(unif_file != 0);
 	assert(ines_file != 0);
@@ -487,13 +488,28 @@ void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 		printf("error loading iNES file\n");
 		return;
 	}
+	
+	mirroring = mirroring_INES(&cart);
 
 	printf("source filename     - %s\n", ines_file);
-	printf("iNES mapper #       - %d\n", (cart.header.ctrl1 >> 4) | (cart.header.ctrl2 & 0xf0));
-	printf("vertical mirroring  - %d\n", (cart.header.ctrl1 & INES_MIRROR ) != 0);
-	printf("four screen enabled - %d\n", (cart.header.ctrl1 & INES_4SCREEN) != 0);
+	printf("iNES mapper #       - %d.%d\n", mapper_INES(&cart), submapper_INES(&cart));
+	
+	switch(mirroring) {
+	case MIRR_HORIZONTAL:
+		printf("mirroring           - %s\n", "horizontal");
+		break;
+	case MIRR_VERTICAL:
+		printf("mirroring           - %s\n", "vertical");
+		break;
+	case MIRR_4SCREEN:
+		printf("mirroring           - %s\n", "4 screen");
+		break;
+	}
+
 	printf("sram enabled        - %d\n", (cart.header.ctrl1 & INES_SRAM) != 0);
 	printf("trainer present     - %d\n", (cart.header.ctrl1 & INES_TRAINER) != 0);
+	printf("# of 16k PRG Pages  - %d\n", prg_size_INES(&cart));
+	printf("# of 8k CHR Pages   - %d\n", chr_size_INES(&cart));
 
 	open_UNIF(unif_file, &file_dest, UNIF_OPEN_WRITE);
 
