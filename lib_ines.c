@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2000 - 2011 Evan Teran
                           eteran@alum.rit.edu
-				   
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifdef _MSC_VER
-#pragma warning( disable : 4127 ) 
+#pragma warning( disable : 4127 )
 #endif
 
 #include "lib_ines.h"
@@ -36,11 +36,11 @@ UNIF_RETURN_CODE open_INES(const char *filename, FILE **file, UNIF_OPEN_MODE mod
 	/* check pointers */
 	assert(filename != 0);
 	assert(file != 0);
-	
+
 	/* open the file */
 	if(mode == UNIF_OPEN_READ)	*file = fopen(filename, "rb");
 	else						*file = fopen(filename, "wb");
-		
+
 	/* check if successful */
 	if(*file == 0) {
 		return UNIF_OPEN_FAILED;
@@ -53,7 +53,7 @@ UNIF_RETURN_CODE open_INES(const char *filename, FILE **file, UNIF_OPEN_MODE mod
 // close_INES(FILE *file)
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE close_INES(FILE *file) {
-	
+
 	/* check pointers */
 	assert(file != 0);
 
@@ -69,11 +69,11 @@ UNIF_RETURN_CODE close_INES(FILE *file) {
 // read_header_INES(FILE *file, ines_header_t *header)
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE read_header_INES(FILE *file, ines_header_t *header) {
-	
+
 	/* check pointers */
 	assert(file != 0);
 	assert(header != 0);
-	
+
 	/* header is ALWAYS at begining of file */
 	rewind(file);
 

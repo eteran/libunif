@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2000 - 2011 Evan Teran
                           eteran@alum.rit.edu
-				   
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
@@ -31,7 +31,6 @@ uint32_t unif_crc32(const void *data, uint32_t length, uint32_t initial_value);
 }
 #endif
 
-	
+
 #endif
-	
-	
+
