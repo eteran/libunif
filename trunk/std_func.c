@@ -45,14 +45,13 @@ int ask_question_yn(const char *query) {
 
 		buffer[0] = tolower(buffer[0]);
 
-
 		/* we only can possibly read one character at a time, so only
 		 * need to check the first */
 		if(buffer[0] == '\n') {
 			return 0;
 		}
 
-	} while(buffer[0] != 'y' && buffer[0] != 'n');
+	} while((buffer[0] != 'y' && buffer[0] != 'n') || (buffer[1] != '\n' && buffer[1] != '\0'));
 
 	return buffer[0] == 'y';
 }
