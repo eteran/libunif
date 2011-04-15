@@ -55,7 +55,7 @@ as written. This is for identification purposes, a little like .NES' "NES^Z"
 The string is followed by Revision number and reserved bytes.
 
 Format: 00h-03h: "UNIF" tag identifier
-        04h-07h: DWORD -> Revision number, currently 4
+        04h-07h: DWORD -> Revision number, currently 7
         08h-1Fh: Reserved for future usage
 
 Sample structure:
@@ -134,8 +134,8 @@ there is, or if it is VRAM. It is all implied by the board name. A list
 will soon be distributed containing board name information.
 
 Address of board table for North American Games and Board Names description:
-http://www.codef00.com/boardtable.txt
-http://www.codef00.com/boardnames.txt
+http://codef00.com/boardtable.txt
+http://codef00.com/boardnames.txt
 
 ID: [READ]
 Length: ??
@@ -268,7 +268,7 @@ modifications, or would like to collaborate to the elaboration and design
 process, e-mail Evan Teran at: eteran@alum.rit.edu.
 
 A multi-platform C Code Library for UNIF support was made by Evan Teran. It
-is available at http://www.codef00.com/projects#unif.
+is available at http://codef00.com/projects#unif.
 
 [References]
 {.NES file format specifications} by Marat Fayzullin (fms@cs.umd.edu)

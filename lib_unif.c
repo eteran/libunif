@@ -26,31 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 #include <stdlib.h>
 
-
-#define SAFE_FREE(x) do { free(x); (x) = 0; } while(0)
-
-/*-----------------------------------------------------------------------------
-// name: known_block_UNIF(unif_chunk_t *chunk_header)
-//---------------------------------------------------------------------------*/
-static int known_block_UNIF(unif_chunk_t *chunk_header) {
-	assert(chunk_header != 0);
-
-	if(memcmp(chunk_header->id, "DINF", 4) == 0) return 1;
-	if(memcmp(chunk_header->id, "MAPR", 4) == 0) return 1;
-	if(memcmp(chunk_header->id, "READ", 4) == 0) return 1;
-	if(memcmp(chunk_header->id, "NAME", 4) == 0) return 1;
-	if(memcmp(chunk_header->id, "TVCI", 4) == 0) return 1;
-	if(memcmp(chunk_header->id, "CTRL", 4) == 0) return 1;
-	if(memcmp(chunk_header->id, "BATR", 4) == 0) return 1;
-	if(memcmp(chunk_header->id, "VROR", 4) == 0) return 1;
-	if(memcmp(chunk_header->id, "MIRR", 4) == 0) return 1;
-	if((memcmp(chunk_header->id, "PRG", 3) == 0) && strchr("0123456789ABCDEF", chunk_header->id[3]) != NULL) return 1;
-	if((memcmp(chunk_header->id, "CHR", 3) == 0) && strchr("0123456789ABCDEF", chunk_header->id[3]) != NULL) return 1;
-	if((memcmp(chunk_header->id, "PCK", 3) == 0) && strchr("0123456789ABCDEF", chunk_header->id[3]) != NULL) return 1;
-	if((memcmp(chunk_header->id, "CCK", 3) == 0) && strchr("0123456789ABCDEF", chunk_header->id[3]) != NULL) return 1;
-	return 0;	
-}
-
 /*-----------------------------------------------------------------------------
 // name: open_UNIF(const char *filename, FILE **file, UNIF_OPEN_MODE mode)
 //---------------------------------------------------------------------------*/
@@ -177,13 +152,6 @@ UNIF_RETURN_CODE read_chunk_UNIF(FILE *file, unif_chunk_t *chunk_header, void **
 
 		return UNIF_READ_FAILED;
 	}
-	
-	/* we saw something we completely don't understand as a UNIF header, 
-	 * just consider it to be EOF 
-	 */
-	if(!known_block_UNIF(chunk_header)) {
-		return UNIF_END_OF_FILE;
-	}
 
 	/* allocate memory for the chunk data */
 	*chunk_data = malloc(chunk_header->length);
@@ -193,7 +161,7 @@ UNIF_RETURN_CODE read_chunk_UNIF(FILE *file, unif_chunk_t *chunk_header, void **
 
 	/* read the chunk data */
 	if(fread(*chunk_data, 1, chunk_header->length, file) != chunk_header->length) {
-		SAFE_FREE(*chunk_data);
+		free(*chunk_data);
 		return UNIF_READ_FAILED;
 	}
 
