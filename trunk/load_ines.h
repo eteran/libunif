@@ -43,7 +43,7 @@ typedef enum {
 /* some example implementations for loading and freeing a INES file */
 UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart);
 UNIF_RETURN_CODE free_file_INES(ines_cart_t *cart);
-UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, ines_cart_t *cart);
+UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, size_t size, ines_cart_t *cart);
 UNIF_RETURN_CODE write_file_INES(const char *filename, const ines_cart_t *cart);
 
 /* API access to iNES data, works with version 2.0 ROMs as well */

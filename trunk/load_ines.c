@@ -70,9 +70,9 @@ UNIF_RETURN_CODE write_file_INES(const char *filename, const ines_cart_t *cart) 
 }
 
 /*-----------------------------------------------------------------------------
-// load_ptr_INES(const uint8_t *rom, ines_cart_t *cart)
+// load_ptr_INES(const uint8_t *rom, size_t size, ines_cart_t *cart)
 //---------------------------------------------------------------------------*/
-UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, ines_cart_t *cart) {
+UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, size_t size, ines_cart_t *cart) {
 
     UNIF_RETURN_CODE retcode = UNIF_OK;
 	uint8_t *file_data     = 0;
@@ -84,6 +84,10 @@ UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, ines_cart_t *cart) {
 
 	assert(cart != 0);
 	assert(rom != 0);
+	
+	if(size < sizeof(ines_header_t)) {
+		return UNIF_LENGTH_ERROR;
+	}
 	
 	memcpy(&header, rom, sizeof(ines_header_t));
 
@@ -110,6 +114,10 @@ UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, ines_cart_t *cart) {
 	
 	/* NULL the cart header pointer, it was temporary */
 	cart->header = 0;
+	
+	if(size < sizeof(ines_header_t) + trainer_size + prg_size + chr_size) {
+		return UNIF_LENGTH_ERROR;
+	}
 	
 	/* allocate memory for the cart */
 	file_data = malloc(sizeof(ines_header_t) + trainer_size + prg_size + chr_size);
