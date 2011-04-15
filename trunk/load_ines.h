@@ -27,7 +27,7 @@ extern "C"{
 
 /* description of a ines file */
 typedef struct {
-	ines_header_t	header;
+	ines_header_t	*header;
 	uint8_t			*trainer;
 	uint8_t			*prg_rom;
 	uint8_t			*chr_rom;

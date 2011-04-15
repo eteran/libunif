@@ -22,9 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <assert.h>
 
-/* a macro that will free and null a pointer */
-#define SAFE_FREE(x) do { free(x); (x) = 0; } while(0)
-
 /*-----------------------------------------------------------------------------
 // write_file_INES(const char *filename, const ines_cart_t *cart)
 //---------------------------------------------------------------------------*/
@@ -42,12 +39,12 @@ UNIF_RETURN_CODE write_file_INES(const char *filename, const ines_cart_t *cart) 
 		return retcode;
 	}
 
-	if((retcode = write_header_INES(file, &cart->header)) != UNIF_OK) {
+	if((retcode = write_header_INES(file, cart->header)) != UNIF_OK) {
 		close_INES(file);
 		return retcode;
 	}
 
-	if((cart->header.ctrl1 & INES_TRAINER) != 0) {
+	if((cart->header->ctrl1 & INES_TRAINER) != 0) {
 		if(fwrite(cart->trainer, 512, 1, file) != 1) {
 			close_INES(file);
 			return UNIF_WRITE_FAILED;
@@ -78,59 +75,76 @@ UNIF_RETURN_CODE write_file_INES(const char *filename, const ines_cart_t *cart) 
 UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, ines_cart_t *cart) {
 
     UNIF_RETURN_CODE retcode = UNIF_OK;
-    int prg_size = 0;
-    int chr_size = 0;
-    int trainer_size = 0;
+	uint8_t *file_data     = 0;
+	const uint8_t *rom_ptr = 0;
+    size_t prg_size        = 0;
+    size_t chr_size        = 0;
+    size_t trainer_size    = 0;
+	ines_header_t header;
 
 	assert(cart != 0);
 	assert(rom != 0);
+	
+	memcpy(&header, rom, sizeof(ines_header_t));
 
-    memcpy(&cart->header, rom, sizeof(ines_header_t));
+	cart->header  = 0;
 	cart->trainer = 0;
 	cart->prg_rom = 0;
 	cart->chr_rom = 0;
-    cart->version = ((cart->header.ctrl2 & 0xc) == 0x8) ? 2 : 1;
-
-	if((retcode = check_header_INES(&cart->header, cart->version)) == UNIF_OK) {
-
-    	if(cart->header.ctrl1 & INES_TRAINER) {
-        	trainer_size = 512;
-    	}
-
-    	prg_size = prg_size_INES(cart) * 16384;
-    	chr_size = chr_size_INES(cart) * 8192;
-
-    	rom += sizeof(ines_header_t);
-
-		if((cart->header.ctrl1 & INES_TRAINER) != 0) {
-        	if((cart->trainer = malloc(trainer_size)) == 0) {
-            	return UNIF_OUT_OF_MEMORY;
-        	}
-        	memcpy(cart->trainer, rom, trainer_size);
-		}
-
-    	rom += trainer_size;
-
-    	if(((cart->prg_rom) = malloc(prg_size)) == 0) {
-	    	SAFE_FREE(cart->trainer);
-        	return UNIF_OUT_OF_MEMORY;
-    	}
-    	memcpy(cart->prg_rom, rom, prg_size);
-
-    	rom += prg_size;
-
-    	if(chr_size != 0) {
-        	if(((cart->chr_rom) = malloc(chr_size)) == 0) {
-        		SAFE_FREE(cart->trainer);
-        		SAFE_FREE(cart->prg_rom);
-            	return UNIF_OUT_OF_MEMORY;
-        	}
-        	memcpy(cart->chr_rom, rom, chr_size);
-    	}
+    cart->version = ((header.ctrl2 & 0xc) == 0x8) ? 2 : 1;
+	
+	retcode = check_header_INES(&header, cart->version);
+	if((retcode != UNIF_OK) && (retcode != UNIF_DIRTY_HEADER)) {
+		return retcode;
 	}
+	
+	/* temporarily make the cart point to our read header */
+	cart->header = &header;
 
+	if((header.ctrl1 & INES_TRAINER) != 0) {
+		trainer_size = 512;
+	}
+	
+	prg_size = prg_size_INES(cart) * 16384;
+	chr_size = chr_size_INES(cart) * 8192;
+	
+	/* NULL the cart header pointer, it was temporary */
+	cart->header = 0;
+	
+	/* allocate memory for the cart */
+	file_data = malloc(sizeof(ines_header_t) + trainer_size + prg_size + chr_size);
+	if(file_data == 0) {
+		return UNIF_OUT_OF_MEMORY;
+	}
+	
+	/* assign some pointers */
+	cart->header = (void *)file_data;
+	if(trainer_size != 0) {
+		cart->trainer = file_data + sizeof(ines_header_t);
+		cart->prg_rom = file_data + sizeof(ines_header_t) + trainer_size;
+		cart->chr_rom = file_data + sizeof(ines_header_t) + trainer_size + prg_size;
+	} else {
+		cart->trainer = 0;
+		cart->prg_rom = file_data + sizeof(ines_header_t);
+		cart->chr_rom = file_data + sizeof(ines_header_t) + prg_size;	
+	}
+	
+	rom_ptr = rom;
+	
+	memcpy(cart->header, rom_ptr, sizeof(ines_header_t));
+	rom_ptr += sizeof(ines_header_t);
+	
+	if(trainer_size) {
+		memcpy(cart->trainer, rom_ptr, trainer_size);
+		rom_ptr += trainer_size;
+	}
+	
+	memcpy(cart->prg_rom, rom_ptr, prg_size);
+	rom_ptr += prg_size;
+	
+	memcpy(cart->chr_rom, rom_ptr, chr_size);
+	
     return retcode;
-
 }
 
 /*-----------------------------------------------------------------------------
@@ -139,12 +153,18 @@ UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, ines_cart_t *cart) {
 UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart) {
 
 	UNIF_RETURN_CODE retcode = UNIF_OK;
-	FILE *file = 0;
+
+	FILE *file            = 0;
+	uint8_t *file_data    = 0;
+	size_t trainer_size   = 0;
+	size_t prg_size       = 0;
+	size_t chr_size       = 0;
+	ines_header_t header;
 
 	assert(cart != 0);
 	assert(filename != 0);
 
-	memset(&cart->header, 0, sizeof(ines_header_t));
+	cart->header  = 0;
 	cart->trainer = 0;
 	cart->prg_rom = 0;
 	cart->chr_rom = 0;
@@ -153,44 +173,79 @@ UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart) {
 		return retcode;
 	}
 
-	if((retcode = read_header_INES(file, &cart->header)) != UNIF_OK) {
+	if((retcode = read_header_INES(file, &header)) != UNIF_OK) {
 		close_INES(file);
 		return retcode;
 	}
 
-	cart->version = ((cart->header.ctrl2 & 0xc) == 0x8) ? 2 : 1;
+	cart->version = ((header.ctrl2 & 0xc) == 0x8) ? 2 : 1;
 
-	retcode = check_header_INES(&cart->header, cart->version);
+	retcode = check_header_INES(&header, cart->version);
 	if((retcode != UNIF_OK) && (retcode != UNIF_DIRTY_HEADER)) {
 		close_INES(file);
 		return retcode;
 	}
+	
+	/* temporarily make the cart point to our read header */
+	cart->header = &header;
 
-	if((cart->header.ctrl1 & INES_TRAINER) != 0) {
-		retcode = read_data_INES(file, &cart->trainer, 512);
-		if(retcode != UNIF_OK) {
-			close_INES(file);
-			return retcode;
-		}
+	if((header.ctrl1 & INES_TRAINER) != 0) {
+		trainer_size = 512;
+	}
+	
+	prg_size = prg_size_INES(cart) * 16384;
+	chr_size = chr_size_INES(cart) * 8192;
+	
+	/* NULL the cart header pointer, it was temporary */
+	cart->header = 0;
+	
+	/* allocate memory for the cart */
+	file_data = malloc(sizeof(ines_header_t) + trainer_size + prg_size + chr_size);
+	if(file_data == 0) {
+		return UNIF_OUT_OF_MEMORY;
+	}
+	
+	/* assign some pointers */
+	cart->header = (void *)file_data;
+	if(trainer_size != 0) {
+		cart->trainer = file_data + sizeof(ines_header_t);
+		cart->prg_rom = file_data + sizeof(ines_header_t) + trainer_size;
+		cart->chr_rom = file_data + sizeof(ines_header_t) + trainer_size + prg_size;
+	} else {
+		cart->trainer = 0;
+		cart->prg_rom = file_data + sizeof(ines_header_t);
+		cart->chr_rom = file_data + sizeof(ines_header_t) + prg_size;	
 	}
 
-	retcode = read_data_INES(file, &cart->prg_rom, prg_size_INES(cart) * 16384);
+	memcpy(file_data, cart->header, sizeof(ines_header_t));
+	if(trainer_size != 0) {
+		retcode = read_data_INES(file, cart->trainer, trainer_size);
+		if(retcode != UNIF_OK) {
+			goto error;
+		}
+	}
+	
+	retcode = read_data_INES(file, cart->prg_rom, prg_size);
 	if(retcode != UNIF_OK) {
-		SAFE_FREE(cart->trainer);
-		close_INES(file);
-		return retcode;
+		goto error;
+	}
+	
+	retcode = read_data_INES(file, cart->chr_rom, chr_size);
+	if(retcode != UNIF_OK) {
+		goto error;
 	}
 
-	if(cart->header.chr_size != 0) {
-		retcode = read_data_INES(file, &cart->chr_rom, chr_size_INES(cart) * 8192);
-		if(retcode != UNIF_OK) {
-			SAFE_FREE(cart->trainer);
-			SAFE_FREE(cart->prg_rom);
-			close_INES(file);
-			return retcode;
-		}
-	}
+	close_INES(file);
+	return retcode;
+	
+error:
 
+	cart->header  = 0;
+	cart->trainer = 0;
+	cart->prg_rom = 0;
+	cart->chr_rom = 0;
+
+	free(file_data);
 	close_INES(file);
 	return retcode;
 }
@@ -200,10 +255,7 @@ UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart) {
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE free_file_INES(ines_cart_t *cart) {
 	assert(cart != 0);
-
-	SAFE_FREE(cart->trainer);
-	SAFE_FREE(cart->prg_rom);
-	SAFE_FREE(cart->chr_rom);
+	free(cart->header);
 	return UNIF_OK;
 }
 
@@ -211,7 +263,7 @@ UNIF_RETURN_CODE free_file_INES(ines_cart_t *cart) {
 // mirroring_INES(const ines_cart_t *cart)
 //---------------------------------------------------------------------------*/
 INES_MIRRORING mirroring_INES(const ines_cart_t *cart) {
-	switch(cart->header.ctrl1 & 0x09) {
+	switch(cart->header->ctrl1 & 0x09) {
 	case 0x09:
 	case 0x08:
 		return MIRR_4SCREEN;
@@ -230,9 +282,9 @@ uint32_t mapper_INES(const ines_cart_t *cart) {
 
 	switch(cart->version) {
 	case 2:
-		return (((uint32_t)(cart->header.extended.ines2.byte8 & 0x0f)) << 8) | (cart->header.ctrl1 >> 4) | (cart->header.ctrl2 & 0xf0);
+		return (((uint32_t)(cart->header->extended.ines2.byte8 & 0x0f)) << 8) | (cart->header->ctrl1 >> 4) | (cart->header->ctrl2 & 0xf0);
 	default:
-		return (cart->header.ctrl1 >> 4) | (cart->header.ctrl2 & 0xf0);
+		return (cart->header->ctrl1 >> 4) | (cart->header->ctrl2 & 0xf0);
 	}
 }
 
@@ -242,7 +294,7 @@ uint32_t mapper_INES(const ines_cart_t *cart) {
 uint32_t submapper_INES(const ines_cart_t *cart) {
 	switch(cart->version) {
 	case 2:
-		return (cart->header.extended.ines2.byte8 & 0xf0) >> 4;
+		return (cart->header->extended.ines2.byte8 & 0xf0) >> 4;
 	default:
 		return 0;
 	}
@@ -254,9 +306,9 @@ uint32_t submapper_INES(const ines_cart_t *cart) {
 uint32_t prg_size_INES(const ines_cart_t *cart) {
 	switch(cart->version) {
 	case 2:
-		return cart->header.prg_size | (((uint32_t)cart->header.extended.ines2.byte9 & 0x0f) << 8);
+		return cart->header->prg_size | (((uint32_t)cart->header->extended.ines2.byte9 & 0x0f) << 8);
 	default:
-		return cart->header.prg_size;
+		return cart->header->prg_size;
 	}
 }
 
@@ -266,8 +318,8 @@ uint32_t prg_size_INES(const ines_cart_t *cart) {
 uint32_t chr_size_INES(const ines_cart_t *cart) {
 	switch(cart->version) {
 	case 2:
-		return cart->header.chr_size | (((uint32_t)cart->header.extended.ines2.byte9 & 0xf0) << 4);
+		return cart->header->chr_size | (((uint32_t)cart->header->extended.ines2.byte9 & 0xf0) << 4);
 	default:
-		return cart->header.chr_size;
+		return cart->header->chr_size;
 	}
 }
