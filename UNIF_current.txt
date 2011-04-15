@@ -116,8 +116,8 @@ Description: This is supplemental information about the mapper. DO NOT USE
              already a list in progress describing each NES cart and the
              board it uses. The string is NULL-TERMINATED.
 
-examples: N,R,O,M,,0 -> This "No mapper"
-          U,N,R,O,M,0 -> This is (LS161+LS32)
+examples: N,E,S,-,N,R,O,M,-,2,5,6,\0 -> This "No mapper"
+          N,E,S,-,U,N,R,O,M,\0       -> This is (LS161+LS32)
 
 NOTA: This mapper organization suggests that emulators must be rewritten
 to emulate the ACTUAL CARTRIDGE HARDWARE, and not solely a case of another

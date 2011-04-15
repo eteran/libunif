@@ -217,8 +217,13 @@ const char *get_error_string_UNIF(UNIF_RETURN_CODE code) {
 		return "could not properly close file";
 	case UNIF_WRITE_FAILED:
 		return "could not write to file";
+	case UNIF_INPUT_FAIL:
+		return "input error";
+	case UNIF_LENGTH_ERROR:
+		return "invalid length provided";
     default:
 		return "unknown error";
     }
 }
+
 
