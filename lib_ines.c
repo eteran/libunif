@@ -125,20 +125,13 @@ UNIF_RETURN_CODE check_header_INES(const ines_header_t *header, int version) {
 }
 
 /*-----------------------------------------------------------------------------
-// read_data_INES( FILE * file, uint8_t **dst, size_t len )
+// read_data_INES( FILE * file, uint8_t *dst, size_t len )
 //---------------------------------------------------------------------------*/
-UNIF_RETURN_CODE read_data_INES(FILE *file, uint8_t **dst, size_t len) {
+UNIF_RETURN_CODE read_data_INES(FILE *file, uint8_t *dst, size_t len) {
 	assert(file != 0);
 	assert(dst != 0);
 
-	*dst = malloc(len);
-
-	if(*dst == 0) {
-		return UNIF_OUT_OF_MEMORY;
-	}
-
-	if(fread(*dst, 1, len, file) != len) {
-		SAFE_FREE(*dst);
+	if(fread(dst, 1, len, file) != len) {
 		return UNIF_READ_FAILED;
 	}
 

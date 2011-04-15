@@ -506,8 +506,8 @@ void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 		break;
 	}
 
-	printf("sram enabled        - %d\n", (cart.header.ctrl1 & INES_SRAM) != 0);
-	printf("trainer present     - %d\n", (cart.header.ctrl1 & INES_TRAINER) != 0);
+	printf("sram enabled        - %d\n", (cart.header->ctrl1 & INES_SRAM) != 0);
+	printf("trainer present     - %d\n", (cart.header->ctrl1 & INES_TRAINER) != 0);
 	printf("# of 16k PRG Pages  - %d\n", prg_size_INES(&cart));
 	printf("# of 8k CHR Pages   - %d\n", chr_size_INES(&cart));
 
@@ -523,10 +523,10 @@ void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 	write_batr(file_dest);
 	write_vror(file_dest);
 	write_dinf(file_dest);
-	write_prg(file_dest, cart.prg_rom, cart.header.prg_size << 14);
-	write_pck(file_dest, cart.prg_rom, cart.header.prg_size << 14);
-	write_chr(file_dest, cart.chr_rom, cart.header.chr_size << 13);
-	write_cck(file_dest, cart.chr_rom, cart.header.chr_size << 13);
+	write_prg(file_dest, cart.prg_rom, cart.header->prg_size << 14);
+	write_pck(file_dest, cart.prg_rom, cart.header->prg_size << 14);
+	write_chr(file_dest, cart.chr_rom, cart.header->chr_size << 13);
+	write_cck(file_dest, cart.chr_rom, cart.header->chr_size << 13);
 
 	close_UNIF(file_dest);
 	free_file_INES(&cart);

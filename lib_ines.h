@@ -61,12 +61,12 @@ typedef struct {
 #define INES_4SCREEN		0x08
 
 /* function prototypes */
-UNIF_RETURN_CODE open_INES(const char *filename, FILE **file, UNIF_OPEN_MODE mode);
+UNIF_RETURN_CODE check_header_INES(const ines_header_t *header, int version);
 UNIF_RETURN_CODE close_INES(FILE *file);
+UNIF_RETURN_CODE open_INES(const char *filename, FILE **file, UNIF_OPEN_MODE mode);
+UNIF_RETURN_CODE read_data_INES(FILE *file, uint8_t *dst, size_t len);
 UNIF_RETURN_CODE read_header_INES(FILE *file, ines_header_t *header);
 UNIF_RETURN_CODE write_header_INES(FILE *file, const ines_header_t *header);
-UNIF_RETURN_CODE check_header_INES(const ines_header_t *header, int version);
-UNIF_RETURN_CODE read_data_INES(FILE *file, uint8_t **dst, size_t len);
 
 #ifdef __cplusplus
 }
