@@ -103,7 +103,7 @@ UNIF_RETURN_CODE write_pck(FILE *file, uint8_t *prg_code, size_t size) {
 	assert(prg_code != 0);
 	assert(size != 0);
 
-	if(ask_question_yn("do you want a PCK0 block ( PRG CRC ) (y/n)? [n] ")) {
+	if(ask_question_yn("do you want a PCK0 block (PRG0 CRC) (y/n)? [n] ")) {
 		unif_chunk_t	chunk_header_UNIF;
 		uint32_t		crc;
 
@@ -127,7 +127,7 @@ UNIF_RETURN_CODE write_cck(FILE * file, uint8_t *chr_code, size_t size) {
 	assert(chr_code != 0);
 	assert(size != 0);
 
-	if(ask_question_yn("do you want a CCK0 block ( CHR CRC ) (y/n)? [n] ")) {
+	if(ask_question_yn("do you want a CCK0 block (CHR0 CRC) (y/n)? [n] ")) {
 		unif_chunk_t	chunk_header_UNIF;
 		uint32_t		crc;
 
@@ -171,7 +171,7 @@ UNIF_RETURN_CODE write_vror(FILE *file) {
 
 	assert(file != 0);
 
-	if(ask_question_yn("enable VRAM Override (y/n)? [n] ")) {
+	if(ask_question_yn("enable VRAM override (y/n)? [n] ")) {
 		unif_chunk_t	chunk_header_UNIF;
 		uint8_t			chunk_data = 0;
 
@@ -251,7 +251,7 @@ UNIF_RETURN_CODE write_name(FILE *file) {
 
 	if(ask_question_yn("do you want an internal ROM name (y/n)? [n] ")) {
 		unif_chunk_t  chunk_header_UNIF;
-		char		internal_name[0x400]; /* more than enough ?*/
+		char		internal_name[0x400]; /* more than enough ? */
 
 		printf("what is the internal name? ");
 		memset(internal_name, 0, sizeof(internal_name));
@@ -523,10 +523,10 @@ void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 	write_batr(file_dest);
 	write_vror(file_dest);
 	write_dinf(file_dest);
-	write_prg(file_dest, cart.prg_rom, cart.header->prg_size << 14);
-	write_pck(file_dest, cart.prg_rom, cart.header->prg_size << 14);
-	write_chr(file_dest, cart.chr_rom, cart.header->chr_size << 13);
-	write_cck(file_dest, cart.chr_rom, cart.header->chr_size << 13);
+	write_prg(file_dest, cart.prg_rom, cart.header->prg_size * 16384);
+	write_pck(file_dest, cart.prg_rom, cart.header->prg_size * 16384);
+	write_chr(file_dest, cart.chr_rom, cart.header->chr_size * 8192);
+	write_cck(file_dest, cart.chr_rom, cart.header->chr_size * 8192);
 
 	close_UNIF(file_dest);
 	free_file_INES(&cart);
@@ -546,13 +546,26 @@ int get_ines_mapper(const char *board_name, ines_info_t *info) {
 		{ "NES-NROM-128", 0, 1, 0 }, /* NROM-128: No mapper, PRG-ROM, CHR-ROM */
 		{ "NES-NROM-256", 0, 1, 0 }, /* NROM-256: No mapper, PRG-ROM, CHR-ROM */
 		{ "NES-RROM",     0, 1, 0 }, /* NES-RROM: Same as NROM (Only used in Clu Clu land) */
-		{ "NES-SNROM",    1, 0, 0 }, /* SNROM: MMC1A, PRG ROM, CHR ROM/RAM ?, 8k optional RAM (battery)   */
-		{ "NES-SOROM",    1, 0, 0 }, /* SOROM: MMC1B2, PRG ROM, VRAM, 16K of WRAM (Battery) Only 8K battery-backed */
-		{ "NES-SGROM",    1, 0, 0 }, /* SGROM: MMC1B, PRG ROM, 8k CHR-RAM */
-		{ "NES-SVROM",    1, 0, 0 }, /* SVROM: MMC1B2, PRG ROM, VRAM, WRAM (Battery) */
-		{ "NES-SUROM",    1, 0, 0 }, /* SUROM: MMC1B2, PRG ROM, CHR RAM/(ROM?), 8k battery-backed RAM (DW4???) */
-		{ "NES-SAROM",    1, 1, 0 }, /* SAROM: MMC1B, PRG ROM, CHR ROM, optional 8k of RAM (battery) */
-		{ "NES-SBROM",    1, 1, 0 }, /* SBROM: MMC1A, PRG ROM, CHR ROM (onl 32K of CHR ROM) */
+		
+		{ "NES-SAROM",    1, 1, 0 }, /* 128KB PRG (28-pin), 64KB CHR, 8KB S-RAM or W-RAM */
+		{ "NES-SBROM",    1, 1, 0 }, /* 128KB PRG (28-pin), 64KB CHR (28-pin) */
+		{ "NES-SCROM",    1, 1, 0 }, /* 128KB PRG (28-pin), 128KB CHR (32-pin) */
+		{ "NES-SEROM",    1, 1, 0 }, /* 32KB not banked, 64KB CHR (28-pin) */
+		{ "NES-SFROM",    1, 1, 0 }, /* 256KB PRG (32-pin), 64KB CHR (28-pin)  */
+		{ "NES-SGROM",    1, 0, 0 }, /* 256KB PRG, 8KB C-RAM banked */
+		{ "NES-SHROM",    1, 1, 0 }, /* 32KB not banked, 128KB CHR (32-pin) */
+		{ "NES-SJROM",    1, 0, 0 }, /* 256KB PRG, 8KB C-RAM, 8KB S-RAM or W-RAM */
+		{ "NES-SKROM",    1, 1, 0 }, /* 256KB PRG, 128KB CHR, 8KB S-RAM or W-RAM */
+		{ "NES-SLROM",    1, 1, 0 }, /* 256KB PRG, 128KB CHR */
+		{ "NES-SL1ROM",   1, 1, 0 }, /* */
+		{ "NES-SL2ROM",   1, 1, 0 }, /* */
+		{ "NES-SL3ROM",   1, 1, 0 }, /* */		
+		{ "NES-SLRROM",   1, 1, 0 }, /* 256KB PRG, 128KB CHR (non JEDEC-pinout) */
+		{ "NES-SNROM",    1, 0, 0 }, /* 256KB PRG, 8KB C-RAM banked, 8KB S-RAM or W-RAM  */
+		{ "NES-SOROM",    1, 1, 0 }, /* 256KB PRG, 128KB CHR, 16KB S-RAM or W-RAM thru CHR bit */
+		{ "NES-SUROM",    1, 0, 0 }, /* 512K PRG thru CHR bit, 8KB C-RAM banked, 8KB S-RAM */
+		{ "NES-SVROM",    1, 1, 0 }, /* 512KB PRG thru CHR bit, 8KB CHR banked, 16KB S-RAM or W-RAM thru CHR bit */
+
 		{ "NES-UNROM",    2, 0, 0 }, /* UNROM: 74LS32+74LS161 mapper, 128k PRG, 8k CHR-RAM */
 		{ "NES-UOROM",    2, 0, 0 },
 		{ "NES-CNROM",    3, 0, 0 }, /* CNROM: LS161 mapper, PRG-ROM, CHR-ROM?/CHR-RAM */
@@ -568,10 +581,6 @@ int get_ines_mapper(const char *board_name, ines_info_t *info) {
 		{ "NES-TLSROM",   4, 0, 0 }, /* TLSROM: Same as TLROM */
 		{ "NES-DRROM",    4, 1, 1 }, /* DRROM: MMC3, 4K of nametable RAM (for 4-screen), PRG-ROM, CHR-ROM (only in Gauntlet) */
 		{ "NES-TLROM",    4, 1, 0 }, /* TLROM: MMC3B, PRG ROM, CHR ROM */
-		{ "NES-SLROM",    4, 1, 0 }, /* SLROM: MMC1A, PRG ROM, CHR ROM */
-		{ "NES-SL1ROM",   4, 1, 0 }, /* SL1ROM: MMC3, PRG ROM, CHR ROM, LS32 (for 128K 28 pin CHR ROMs) */
-		{ "NES-SL2ROM",   4, 1, 0 }, /* SL2ROM: */
-		{ "NES-SL3ROM",   4, 1, 0 }, /* SL3ROM: */
 		{ "ELROM",        5, 1, 0 }, /* ELROM: MMC5, PRG-ROM, CHR-ROM */
 		{ "ETROM",        5, 1, 0 }, /* ETROM: MMC5, PRG-ROM, CHR-ROM, 2x 8k optionnal RAM (battery) */
 		{ "EWROM",        5, 1, 0 }, /* EWROM: MMC5, PRG-ROM, CHR-ROM, 32k optionnal RAM (battery) */
