@@ -26,8 +26,8 @@ extern "C"{
 #include "lib_unif.h"
 
 typedef struct {
-	uint32_t		*pck[0x10];
-	uint32_t		*cck[0x10];
+	uint32_t		pck[0x10];
+	uint32_t		cck[0x10];
 	uint8_t			*prg[0x10];
 	uint8_t			*chr[0x10];
 	uint32_t		prg_pages[0x10];

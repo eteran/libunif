@@ -240,50 +240,53 @@ UNIF_RETURN_CODE load_file_UNIF(const char *filename, unif_cart_t *cart) {
 					}
 				} else if(memcmp(chunk_hdr.id, "PCK", 3) == 0) {
 					switch(chunk_hdr.id[3]) {
-					case '0': cart->pck[0x00] = chunk_data.ptr32; break;
-					case '1': cart->pck[0x01] = chunk_data.ptr32; break;
-					case '2': cart->pck[0x02] = chunk_data.ptr32; break;
-					case '3': cart->pck[0x03] = chunk_data.ptr32; break;
-					case '4': cart->pck[0x04] = chunk_data.ptr32; break;
-					case '5': cart->pck[0x05] = chunk_data.ptr32; break;
-					case '6': cart->pck[0x06] = chunk_data.ptr32; break;
-					case '7': cart->pck[0x07] = chunk_data.ptr32; break;
-					case '8': cart->pck[0x08] = chunk_data.ptr32; break;
-					case '9': cart->pck[0x09] = chunk_data.ptr32; break;
-					case 'A': cart->pck[0x0a] = chunk_data.ptr32; break;
-					case 'B': cart->pck[0x0b] = chunk_data.ptr32; break;
-					case 'C': cart->pck[0x0c] = chunk_data.ptr32; break;
-					case 'D': cart->pck[0x0d] = chunk_data.ptr32; break;
-					case 'E': cart->pck[0x0e] = chunk_data.ptr32; break;
-					case 'F': cart->pck[0x0f] = chunk_data.ptr32; break;
+					case '0': cart->pck[0x00] = *chunk_data.ptr32; break;
+					case '1': cart->pck[0x01] = *chunk_data.ptr32; break;
+					case '2': cart->pck[0x02] = *chunk_data.ptr32; break;
+					case '3': cart->pck[0x03] = *chunk_data.ptr32; break;
+					case '4': cart->pck[0x04] = *chunk_data.ptr32; break;
+					case '5': cart->pck[0x05] = *chunk_data.ptr32; break;
+					case '6': cart->pck[0x06] = *chunk_data.ptr32; break;
+					case '7': cart->pck[0x07] = *chunk_data.ptr32; break;
+					case '8': cart->pck[0x08] = *chunk_data.ptr32; break;
+					case '9': cart->pck[0x09] = *chunk_data.ptr32; break;
+					case 'A': cart->pck[0x0a] = *chunk_data.ptr32; break;
+					case 'B': cart->pck[0x0b] = *chunk_data.ptr32; break;
+					case 'C': cart->pck[0x0c] = *chunk_data.ptr32; break;
+					case 'D': cart->pck[0x0d] = *chunk_data.ptr32; break;
+					case 'E': cart->pck[0x0e] = *chunk_data.ptr32; break;
+					case 'F': cart->pck[0x0f] = *chunk_data.ptr32; break;
 					default:
-						SAFE_FREE(chunk_data.ptr);
+						break;
 					}
+					SAFE_FREE(chunk_data.ptr);
 				} else if(memcmp(chunk_hdr.id, "CCK", 3) == 0) {
 					switch(chunk_hdr.id[3]) {
-					case '0': cart->cck[0x00] = chunk_data.ptr32; break;
-					case '1': cart->cck[0x01] = chunk_data.ptr32; break;
-					case '2': cart->cck[0x02] = chunk_data.ptr32; break;
-					case '3': cart->cck[0x03] = chunk_data.ptr32; break;
-					case '4': cart->cck[0x04] = chunk_data.ptr32; break;
-					case '5': cart->cck[0x05] = chunk_data.ptr32; break;
-					case '6': cart->cck[0x06] = chunk_data.ptr32; break;
-					case '7': cart->cck[0x07] = chunk_data.ptr32; break;
-					case '8': cart->cck[0x08] = chunk_data.ptr32; break;
-					case '9': cart->cck[0x09] = chunk_data.ptr32; break;
-					case 'A': cart->cck[0x0a] = chunk_data.ptr32; break;
-					case 'B': cart->cck[0x0b] = chunk_data.ptr32; break;
-					case 'C': cart->cck[0x0c] = chunk_data.ptr32; break;
-					case 'D': cart->cck[0x0d] = chunk_data.ptr32; break;
-					case 'E': cart->cck[0x0e] = chunk_data.ptr32; break;
-					case 'F': cart->cck[0x0f] = chunk_data.ptr32; break;
+					case '0': cart->cck[0x00] = *chunk_data.ptr32; break;
+					case '1': cart->cck[0x01] = *chunk_data.ptr32; break;
+					case '2': cart->cck[0x02] = *chunk_data.ptr32; break;
+					case '3': cart->cck[0x03] = *chunk_data.ptr32; break;
+					case '4': cart->cck[0x04] = *chunk_data.ptr32; break;
+					case '5': cart->cck[0x05] = *chunk_data.ptr32; break;
+					case '6': cart->cck[0x06] = *chunk_data.ptr32; break;
+					case '7': cart->cck[0x07] = *chunk_data.ptr32; break;
+					case '8': cart->cck[0x08] = *chunk_data.ptr32; break;
+					case '9': cart->cck[0x09] = *chunk_data.ptr32; break;
+					case 'A': cart->cck[0x0a] = *chunk_data.ptr32; break;
+					case 'B': cart->cck[0x0b] = *chunk_data.ptr32; break;
+					case 'C': cart->cck[0x0c] = *chunk_data.ptr32; break;
+					case 'D': cart->cck[0x0d] = *chunk_data.ptr32; break;
+					case 'E': cart->cck[0x0e] = *chunk_data.ptr32; break;
+					case 'F': cart->cck[0x0f] = *chunk_data.ptr32; break;
 					default:
-						SAFE_FREE(chunk_data.ptr);
+						break;
 					}
+					SAFE_FREE(chunk_data.ptr);
 				} else {
 					/* since we aren't storing this pointer, free it */
 					SAFE_FREE(chunk_data.ptr);
 				}
+				
 			} else {
 				fprintf(stderr, "%s\n", get_error_string_UNIF(ret_val));
 				break;
@@ -317,9 +320,7 @@ UNIF_RETURN_CODE free_file_UNIF(unif_cart_t *cart) {
 
 	for(i = 0; i < 0x10; i++) {
 		SAFE_FREE(cart->prg[i]);
-		SAFE_FREE(cart->pck[i]);
 		SAFE_FREE(cart->chr[i]);
-		SAFE_FREE(cart->cck[i]);
 	}
 
 	return UNIF_OK;
