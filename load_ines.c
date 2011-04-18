@@ -194,6 +194,7 @@ UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart) {
 		return retcode;
 	}
 	
+	
 	/* temporarily make the cart point to our read header */
 	cart->header = &header;
 
@@ -225,7 +226,7 @@ UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart) {
 		cart->chr_rom = file_data + sizeof(ines_header_t) + prg_size;	
 	}
 
-	memcpy(file_data, cart->header, sizeof(ines_header_t));
+	memcpy(cart->header, &header, sizeof(ines_header_t));
 	if(trainer_size != 0) {
 		retcode = read_data_INES(file, cart->trainer, trainer_size);
 		if(retcode != UNIF_OK) {
