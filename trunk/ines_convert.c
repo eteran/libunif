@@ -33,6 +33,36 @@ Tags not supprted yet in conversion
 */
 
 /*------------------------------------------------------------------------------
+// Name: recommend_board(const ines_cart_t *cart)
+//----------------------------------------------------------------------------*/
+static void recommend_board(const ines_cart_t *cart) {
+	assert(cart != 0);
+	
+	do {
+		const uint32_t ines_mapper    = mapper_INES(cart);
+		const uint32_t ines_submapper = submapper_INES(cart);
+		const uint32_t prg_size       = prg_size_INES(cart) * 16384;
+
+		(void)ines_submapper;
+
+		/* TODO: expand this to many more mappers :-) as we can best detect them */
+		if(ines_mapper == 0) {		
+			switch(prg_size * 8) {
+			case 0x40000:
+				printf("Recommended Board: NES-NROM-256\n");
+				break;
+			case 0x20000:
+				printf("Recommended Board: NES-NROM-128\n");
+				break;
+			default:
+				printf("Recommended Board: NES-NROM\n");
+				break;		
+			}
+		}
+	} while(0);
+}
+
+/*------------------------------------------------------------------------------
 // Name: unif_strncasecmp(const char *s1, const char *s2, size_t n)
 //----------------------------------------------------------------------------*/
 int unif_strncasecmp(const char *s1, const char *s2, size_t n) {
@@ -494,6 +524,7 @@ void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 	printf("source filename     - %s\n", ines_file);
 	printf("iNES mapper #       - %d.%d\n", mapper_INES(&cart), submapper_INES(&cart));
 	
+
 	switch(mirroring) {
 	case MIRR_HORIZONTAL:
 		printf("mirroring           - %s\n", "horizontal");
@@ -510,6 +541,7 @@ void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 	printf("trainer present     - %d\n", (cart.header->ctrl1 & INES_TRAINER) != 0);
 	printf("# of 16k PRG Pages  - %d\n", prg_size_INES(&cart));
 	printf("# of 8k CHR Pages   - %d\n", chr_size_INES(&cart));
+	recommend_board(&cart);
 
 	open_UNIF(unif_file, &file_dest, UNIF_OPEN_WRITE);
 
@@ -523,10 +555,10 @@ void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 	write_batr(file_dest);
 	write_vror(file_dest);
 	write_dinf(file_dest);
-	write_prg(file_dest, cart.prg_rom, cart.header->prg_size * 16384);
-	write_pck(file_dest, cart.prg_rom, cart.header->prg_size * 16384);
-	write_chr(file_dest, cart.chr_rom, cart.header->chr_size * 8192);
-	write_cck(file_dest, cart.chr_rom, cart.header->chr_size * 8192);
+	write_prg(file_dest, cart.prg_rom, prg_size_INES(&cart) * 16384);
+	write_pck(file_dest, cart.prg_rom, prg_size_INES(&cart) * 16384);
+	write_chr(file_dest, cart.chr_rom, chr_size_INES(&cart) * 8192);
+	write_cck(file_dest, cart.chr_rom, chr_size_INES(&cart) * 8192);
 
 	close_UNIF(file_dest);
 	free_file_INES(&cart);
