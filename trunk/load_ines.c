@@ -130,11 +130,15 @@ UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, size_t size, ines_cart_t *car
 	if(trainer_size != 0) {
 		cart->trainer = file_data + sizeof(ines_header_t);
 		cart->prg_rom = file_data + sizeof(ines_header_t) + trainer_size;
-		cart->chr_rom = file_data + sizeof(ines_header_t) + trainer_size + prg_size;
+		if(chr_size != 0) {
+			cart->chr_rom = file_data + sizeof(ines_header_t) + trainer_size + prg_size;
+		}
 	} else {
 		cart->trainer = 0;
 		cart->prg_rom = file_data + sizeof(ines_header_t);
-		cart->chr_rom = file_data + sizeof(ines_header_t) + prg_size;	
+		if(chr_size != 0) {
+			cart->chr_rom = file_data + sizeof(ines_header_t) + prg_size;	
+		}
 	}
 	
 	rom_ptr = rom;
@@ -150,7 +154,9 @@ UNIF_RETURN_CODE load_ptr_INES(const uint8_t *rom, size_t size, ines_cart_t *car
 	memcpy(cart->prg_rom, rom_ptr, prg_size);
 	rom_ptr += prg_size;
 	
-	memcpy(cart->chr_rom, rom_ptr, chr_size);
+	if(chr_size != 0) {
+		memcpy(cart->chr_rom, rom_ptr, chr_size);
+	}
 	
     return retcode;
 }
@@ -219,11 +225,15 @@ UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart) {
 	if(trainer_size != 0) {
 		cart->trainer = file_data + sizeof(ines_header_t);
 		cart->prg_rom = file_data + sizeof(ines_header_t) + trainer_size;
-		cart->chr_rom = file_data + sizeof(ines_header_t) + trainer_size + prg_size;
+		if(chr_size != 0) {
+			cart->chr_rom = file_data + sizeof(ines_header_t) + trainer_size + prg_size;
+		}
 	} else {
 		cart->trainer = 0;
 		cart->prg_rom = file_data + sizeof(ines_header_t);
-		cart->chr_rom = file_data + sizeof(ines_header_t) + prg_size;	
+		if(chr_size != 0) {
+			cart->chr_rom = file_data + sizeof(ines_header_t) + prg_size;
+		}
 	}
 
 	memcpy(cart->header, &header, sizeof(ines_header_t));
@@ -239,9 +249,11 @@ UNIF_RETURN_CODE load_file_INES(const char *filename, ines_cart_t *cart) {
 		goto error;
 	}
 	
-	retcode = read_data_INES(file, cart->chr_rom, chr_size);
-	if(retcode != UNIF_OK) {
-		goto error;
+	if(chr_size != 0) {
+		retcode = read_data_INES(file, cart->chr_rom, chr_size);
+		if(retcode != UNIF_OK) {
+			goto error;
+		}
 	}
 
 	close_INES(file);
