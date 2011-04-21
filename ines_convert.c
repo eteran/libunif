@@ -58,6 +58,17 @@ static void recommend_board(const ines_cart_t *cart) {
 				printf("Recommended Board: NES-NROM\n");
 				break;		
 			}
+		} else if(ines_mapper == 2) {		
+			switch(prg_size) {
+			case 0x40000:
+				printf("Recommended Board: NES-UOROM\n");
+				break;
+			case 0x20000:
+				printf("Recommended Board: NES-UNROM\n");
+				break;
+			default:
+				break;		
+			}
 		}
 	} while(0);
 }
@@ -594,12 +605,13 @@ int get_ines_mapper(const char *board_name, ines_info_t *info) {
 		{ "NES-SL3ROM",   1, 1, 0 }, /* */		
 		{ "NES-SLRROM",   1, 1, 0 }, /* 256KB PRG, 128KB CHR (non JEDEC-pinout) */
 		{ "NES-SNROM",    1, 0, 0 }, /* 256KB PRG, 8KB C-RAM banked, 8KB S-RAM or W-RAM  */
-		{ "NES-SOROM",    1, 1, 0 }, /* 256KB PRG, 128KB CHR, 16KB S-RAM or W-RAM thru CHR bit */
+		{ "NES-SOROM",    1, 0, 0 }, /* 256KB PRG, 128KB CHR, 16KB S-RAM or W-RAM thru CHR bit */
 		{ "NES-SUROM",    1, 0, 0 }, /* 512K PRG thru CHR bit, 8KB C-RAM banked, 8KB S-RAM */
 		{ "NES-SVROM",    1, 1, 0 }, /* 512KB PRG thru CHR bit, 8KB CHR banked, 16KB S-RAM or W-RAM thru CHR bit */
 
 		{ "NES-UNROM",    2, 0, 0 }, /* UNROM: 74LS32+74LS161 mapper, 128k PRG, 8k CHR-RAM */
-		{ "NES-UOROM",    2, 0, 0 },
+		{ "NES-UOROM",    2, 0, 0 }, /* UOROM: 74LS32+74LS161 mapper, 128k PRG, 8k CHR-RAM */
+		
 		{ "NES-CNROM",    3, 0, 0 }, /* CNROM: LS161 mapper, PRG-ROM, CHR-ROM?/CHR-RAM */
 		{ "NES-TBROM",    4, 1, 0 },
 		{ "NES-TEROM",    4, 1, 0 }, /* TEROM: MMC3A, PRG ROM, CHR ROM, (32k ROMs) */
