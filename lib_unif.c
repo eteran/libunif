@@ -36,8 +36,8 @@ UNIF_RETURN_CODE open_UNIF(const char *filename, FILE **file, UNIF_OPEN_MODE mod
 	assert(filename != 0);
 
 	/* open the file */
-	if(mode == UNIF_OPEN_READ)	*file = fopen(filename, "rb");
-	else						*file = fopen(filename, "wb");
+	if(mode == UNIF_OPEN_READ) *file = fopen(filename, "rb");
+	else                       *file = fopen(filename, "wb");
 
 	/* check if successful */
 	if(*file == 0) {

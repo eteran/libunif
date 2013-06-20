@@ -23,29 +23,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 extern "C"{
 #endif
 
-#if defined(WIN32) || defined(WIN64)
-  typedef unsigned __int8	uint8_t;
-  typedef unsigned __int16	uint16_t;
-  typedef unsigned __int32	uint32_t;
-  typedef unsigned __int64	uint64_t;
+#if defined(_WIN32) || defined(_WIN64)
 
-  typedef __int8			int8_t;
-  typedef __int16			int16_t;
-  typedef __int32			int32_t;
-  typedef __int64			int64_t;
+	#if defined(_MSC_VER) && _MSC_VER >= 1600
+		#include <stdint.h>
+	#else
+		typedef unsigned __int8  uint8_t;
+		typedef unsigned __int16 uint16_t;
+		typedef unsigned __int32 uint32_t;
+		typedef unsigned __int64 uint64_t;
 
+		typedef __int8  int8_t;
+		typedef __int16 int16_t;
+		typedef __int32 int32_t;
+		typedef __int64 int64_t;
+	#endif
 #elif defined (__BEOS__)
 	#include <support/SupportDefs.h>
-	typedef int8	int8_t;
-	typedef int16	int16_t;
-	typedef int32	int32_t;
-	typedef int64	int64_t;
+	typedef int8  int8_t;
+	typedef int16 int16_t;
+	typedef int32 int32_t;
+	typedef int64 int64_t;
 
-	typedef uint8	uint8_t;
-	typedef uint16	uint16_t;
-	typedef uint32	uint32_t;
-	typedef uint64	uint64_t;
-#elif defined (Linux)
+	typedef uint8  uint8_t;
+	typedef uint16 uint16_t;
+	typedef uint32 uint32_t;
+	typedef uint64 uint64_t;
+#elif defined (__linux__) || defined(__linux) || defined(__gnu_linux__)
 	#include <stdint.h>
 #elif defined(SunOS)
 	#include <sys/types.h>

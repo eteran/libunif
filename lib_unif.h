@@ -31,20 +31,20 @@ extern "C"{
 #define UNIF_REVISION 0x00000007
 
 /* definitions for the CTRL block */
-#define CTRL_STDJOY		0x01 /* Bit 0: Regular Joypad           */
-#define CTRL_ZAPPER		0x02 /* Bit 1: Zapper                   */
-#define CTRL_ROB		0x04 /* Bit 2: R.O.B                    */
-#define CTRL_ARKANOID	0x08 /* Bit 3: Arkanoid Controller      */
-#define CTRL_POWPAD		0x10 /* Bit 4: Power Pad                */
-#define CTRL_4SCORE		0x20 /* Bit 5: Four-Score adapter       */
-#define CTRL_RESERVE1	0x40 /* Bit 6: Expansion (Do not touch) */
-#define CTRL_RESERVE2	0x80 /* Bit 7: Expansion (Do not touch) */
+#define CTRL_STDJOY   0x01 /* Bit 0: Regular Joypad           */
+#define CTRL_ZAPPER   0x02 /* Bit 1: Zapper                   */
+#define CTRL_ROB      0x04 /* Bit 2: R.O.B                    */
+#define CTRL_ARKANOID 0x08 /* Bit 3: Arkanoid Controller      */
+#define CTRL_POWPAD   0x10 /* Bit 4: Power Pad                */
+#define CTRL_4SCORE   0x20 /* Bit 5: Four-Score adapter       */
+#define CTRL_RESERVE1 0x40 /* Bit 6: Expansion (Do not touch) */
+#define CTRL_RESERVE2 0x80 /* Bit 7: Expansion (Do not touch) */
 
 /* header structure */
 typedef struct {
-	char		id[4];         /* MUST be "UNIF", NOT null terminated */
-	uint32_t	revision;      /* Revision number                     */
-	uint8_t		expansion[24]; /* reserved                            */
+	char     id[4];         /* MUST be "UNIF", NOT null terminated */
+	uint32_t revision;      /* Revision number                     */
+	uint8_t  expansion[24]; /* reserved                            */
 } unif_header_t;
 
 /* chunk header */
@@ -58,9 +58,9 @@ typedef struct {
 	char dumper_name[100];  /* NULL-terminated string containing the name of
 	                         * the person who dumped the cart.               */
 	unsigned char day;      /* Day of the month when cartridge was dumped    */
-	unsigned char month;	/* Month of the year when cartridge was dumped   */
-	unsigned short year;	/* Year during which the cartridge was dumped    */
-	char dumper_agent[100];	/* NULL-terminated string containing the name of
+	unsigned char month;    /* Month of the year when cartridge was dumped   */
+	unsigned short year;    /* Year during which the cartridge was dumped    */
+	char dumper_agent[100]; /* NULL-terminated string containing the name of
                              * the ROM-dumping means used                    */
 } dumper_info_t;
 

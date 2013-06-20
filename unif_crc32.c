@@ -87,7 +87,7 @@ static const uint32_t crc_table[256] = {
 };
 
 /*------------------------------------------------------------------------------
-// Name: unif_crc32(const void *data, uint32_t length, uint32_t initial_value)
+// Name: unif_crc32
 //----------------------------------------------------------------------------*/
 uint32_t unif_crc32(const void *data, uint32_t length, uint32_t initial_value) {
 

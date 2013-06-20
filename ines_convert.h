@@ -34,16 +34,16 @@ typedef enum {
 } CART_TYPE;
 
 typedef struct {
-	int		has_chr_rom;
-	uint8_t	ines_number;
-	int		four_screen;
+	int     has_chr_rom;
+	uint8_t ines_number;
+	int     four_screen;
 } ines_info_t;
 
 typedef struct {
-	const char	*board_name;
-	uint8_t		ines_number;
-	int			chr_rom;
-	int			four_screen;
+	const char *board_name;
+	uint8_t     ines_number;
+	int         chr_rom;
+	int         four_screen;
 } mapr_num_table_t;
 
 void make_unif_file_from_nes(const char *unif_file, const char *ines_file);
