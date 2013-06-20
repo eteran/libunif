@@ -26,8 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <string.h>
 
-#define SAFE_FREE(x) do { free(x); (x) = 0; } while(0)
-
 /*-----------------------------------------------------------------------------
 // open_INES(const char *filename, FILE **file, UNIF_OPEN_MODE mode)
 //---------------------------------------------------------------------------*/
@@ -38,8 +36,8 @@ UNIF_RETURN_CODE open_INES(const char *filename, FILE **file, UNIF_OPEN_MODE mod
 	assert(file != 0);
 
 	/* open the file */
-	if(mode == UNIF_OPEN_READ)	*file = fopen(filename, "rb");
-	else						*file = fopen(filename, "wb");
+	if(mode == UNIF_OPEN_READ) *file = fopen(filename, "rb");
+	else                       *file = fopen(filename, "wb");
 
 	/* check if successful */
 	if(*file == 0) {

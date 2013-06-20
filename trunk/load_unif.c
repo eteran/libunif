@@ -63,13 +63,13 @@ UNIF_RETURN_CODE load_file_UNIF(const char *filename, unif_cart_t *cart) {
 
 		/* as long as we dont have an error, proccess tags */
 		while(ret_val == UNIF_OK) {
-			unif_chunk_t chunk_hdr	= { "", 0 };
+			unif_chunk_t chunk_hdr = { "", 0 };
 
 			union {
-				void 			*ptr;
-				uint8_t			*ptr8;
-				uint32_t		*ptr32;
-				char			*str;
+				void     *ptr;
+				uint8_t  *ptr8;
+				uint32_t *ptr32;
+				char     *str;
 			} chunk_data = { 0 };
 
 			ret_val = read_chunk_UNIF(unif_file, &chunk_hdr, &chunk_data.ptr);
@@ -286,7 +286,7 @@ UNIF_RETURN_CODE load_file_UNIF(const char *filename, unif_cart_t *cart) {
 					/* since we aren't storing this pointer, free it */
 					SAFE_FREE(chunk_data.ptr);
 				}
-				
+
 			} else {
 				fprintf(stderr, "%s\n", get_error_string_UNIF(ret_val));
 				break;

@@ -28,23 +28,23 @@ extern "C"{
 
 /* Layout of First Sixteen Bytes of NES Cartridge in iNES format*/
 typedef struct {
-	char		ines_signature[4];	/* 0x1A53454E (NES file signature) */
-	uint8_t		prg_size;			/* in 16k banks */
-	uint8_t		chr_size;			/* in 8k banks */
-	uint8_t		ctrl1;				/* %####FTBM */
-	uint8_t		ctrl2;				/* %####00PV */
+	char    ines_signature[4]; /* 0x1A53454E (NES file signature) */
+	uint8_t prg_size;          /* in 16k banks */
+	uint8_t chr_size;          /* in 8k banks */
+	uint8_t ctrl1;             /* %NNNN.FTBM */
+	uint8_t ctrl2;             /* %NNNN.SSPV (version 2.0 when SS = 10b*/
 
 	/* in iNES 2.0, these mean something, otherwise, should be 0 */
 	union {
 		struct ines2_t {
-			uint8_t byte8;	/* %SSSSMMMM */
-			uint8_t byte9;	/* %CCCCPPPP */
-			uint8_t byte10;	/* %ppppPPPP */
-			uint8_t byte11;	/* %ccccCCCC */
-			uint8_t byte12;	/* %xxxxxxBP */
-			uint8_t byte13;	/* %MMMMPPPP */
-			uint8_t byte14;
-			uint8_t byte15;
+			uint8_t byte8;  /* %SSSS.MMMM */
+			uint8_t byte9;  /* %CCCC.PPPP */
+			uint8_t byte10; /* %pppp.PPPP */
+			uint8_t byte11; /* %cccc.CCCC */
+			uint8_t byte12; /* %xxxx.xxBP */
+			uint8_t byte13; /* %MMMM.PPPP */
+			uint8_t byte14; /* reserved */
+			uint8_t byte15; /* reserved */
 		} ines2;
 
 		struct ines1_t {
@@ -55,10 +55,10 @@ typedef struct {
 } ines_header_t;
 
 /* Flags in NES_HEADER.ctrl1 */
-#define INES_MIRROR			0x01
-#define INES_SRAM			0x02
-#define INES_TRAINER		0x04
-#define INES_4SCREEN		0x08
+#define INES_MIRROR  0x01
+#define INES_SRAM    0x02
+#define INES_TRAINER 0x04
+#define INES_4SCREEN 0x08
 
 /* function prototypes */
 UNIF_RETURN_CODE check_header_INES(const ines_header_t *header, int version);

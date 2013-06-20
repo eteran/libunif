@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ctype.h>
 
 /*-----------------------------------------------------------------------------
-// Name: ask_question_yn(const char *query)
+// Name: ask_question_yn
 // Desc: presents the user with a yes or no question and waits for a 'y' or 'n'
 // Note: treats no input as 'n'
 //---------------------------------------------------------------------------*/
@@ -57,7 +57,7 @@ int ask_question_yn(const char *query) {
 }
 
 /*-----------------------------------------------------------------------------
-// Name: display_menu(unsigned int n, const char *prompt, ...)
+// Name: display_menu
 // Note: returns (unsigned int)-1 on error
 //---------------------------------------------------------------------------*/
 unsigned int display_menu(unsigned int n, const char *prompt, ...) {
@@ -68,8 +68,8 @@ unsigned int display_menu(unsigned int n, const char *prompt, ...) {
 	assert(prompt != 0);
 
 	do {
-		va_list			var_arg;
-		unsigned int	count;
+		va_list      var_arg;
+		unsigned int count;
 
 		/* print the menu */
 		va_start(var_arg, prompt);
@@ -87,7 +87,7 @@ unsigned int display_menu(unsigned int n, const char *prompt, ...) {
 		}
 
 		/* read the user selection */
-		if(sscanf(buffer, "%u", &user_selection) == EOF) {
+		if(sscanf(buffer, "%255u", &user_selection) == EOF) {
 			continue;
 		}
 	} while(user_selection >= n);

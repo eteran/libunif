@@ -33,11 +33,11 @@ Tags not supprted yet in conversion
 */
 
 /*------------------------------------------------------------------------------
-// Name: recommend_board(const ines_cart_t *cart)
+// Name: recommend_board
 //----------------------------------------------------------------------------*/
 static void recommend_board(const ines_cart_t *cart) {
 	assert(cart != 0);
-	
+
 	do {
 		const uint32_t ines_mapper    = mapper_INES(cart);
 		const uint32_t ines_submapper = submapper_INES(cart);
@@ -46,7 +46,7 @@ static void recommend_board(const ines_cart_t *cart) {
 		(void)ines_submapper;
 
 		/* TODO: expand this to many more mappers :-) as we can best detect them */
-		if(ines_mapper == 0) {		
+		if(ines_mapper == 0) {
 			switch(prg_size * 8) {
 			case 0x40000:
 				printf("Recommended Board: NES-NROM-256\n");
@@ -56,9 +56,9 @@ static void recommend_board(const ines_cart_t *cart) {
 				break;
 			default:
 				printf("Recommended Board: NES-NROM\n");
-				break;		
+				break;
 			}
-		} else if(ines_mapper == 2) {		
+		} else if(ines_mapper == 2) {
 			switch(prg_size) {
 			case 0x40000:
 				printf("Recommended Board: NES-UOROM\n");
@@ -67,14 +67,14 @@ static void recommend_board(const ines_cart_t *cart) {
 				printf("Recommended Board: NES-UNROM\n");
 				break;
 			default:
-				break;		
+				break;
 			}
 		}
 	} while(0);
 }
 
 /*------------------------------------------------------------------------------
-// Name: unif_strncasecmp(const char *s1, const char *s2, size_t n)
+// Name: unif_strncasecmp
 //----------------------------------------------------------------------------*/
 int unif_strncasecmp(const char *s1, const char *s2, size_t n) {
 	int ret = 0;
@@ -93,7 +93,7 @@ int unif_strncasecmp(const char *s1, const char *s2, size_t n) {
 }
 
 /*-----------------------------------------------------------------------------
-// Name: write_header(FILE *file)
+// Name: write_header
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_header(FILE *file) {
 
@@ -112,11 +112,11 @@ UNIF_RETURN_CODE write_header(FILE *file) {
 }
 
 /*-----------------------------------------------------------------------------
-// Name: write_read(FILE *file)
+// Name: write_read
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_read(FILE *file){
 
-#ifdef ENABLE_READ
+#if 0
 	unif_chunk_t chunk_header_UNIF;
 	/* TODO: come up with a better solution than this */
 	char read_data[0x4000]; /* should be enough */
@@ -136,7 +136,7 @@ UNIF_RETURN_CODE write_read(FILE *file){
 }
 
 /*-----------------------------------------------------------------------------
-// Name: write_pck(FILE *file, uint8_t  *prg_code, size_t size)
+// Name: write_pck
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_pck(FILE *file, uint8_t *prg_code, size_t size) {
 
@@ -145,8 +145,8 @@ UNIF_RETURN_CODE write_pck(FILE *file, uint8_t *prg_code, size_t size) {
 	assert(size != 0);
 
 	if(ask_question_yn("do you want a PCK0 block (PRG0 CRC) (y/n)? [n] ")) {
-		unif_chunk_t	chunk_header_UNIF;
-		uint32_t		crc;
+		unif_chunk_t chunk_header_UNIF;
+		uint32_t     crc;
 
 		memcpy(chunk_header_UNIF.id, "PCK0", 4);
 		chunk_header_UNIF.length = sizeof(uint32_t);
@@ -160,7 +160,7 @@ UNIF_RETURN_CODE write_pck(FILE *file, uint8_t *prg_code, size_t size) {
 }
 
 /*-----------------------------------------------------------------------------
-// Name: write_cck(FILE * file, uint8_t *chr_code, size_t size)
+// Name: write_cck
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_cck(FILE * file, uint8_t *chr_code, size_t size) {
 
@@ -169,8 +169,8 @@ UNIF_RETURN_CODE write_cck(FILE * file, uint8_t *chr_code, size_t size) {
 	assert(size != 0);
 
 	if(ask_question_yn("do you want a CCK0 block (CHR0 CRC) (y/n)? [n] ")) {
-		unif_chunk_t	chunk_header_UNIF;
-		uint32_t		crc;
+		unif_chunk_t chunk_header_UNIF;
+		uint32_t     crc;
 
 		memcpy(chunk_header_UNIF.id, "CCK0", 4);
 		chunk_header_UNIF.length = sizeof(uint32_t);
@@ -185,15 +185,15 @@ UNIF_RETURN_CODE write_cck(FILE * file, uint8_t *chr_code, size_t size) {
 
 
 /*-----------------------------------------------------------------------------
-// Name: write_batr(FILE *file)
+// Name: write_batr
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_batr(FILE *file) {
 
 	assert(file != 0);
 
 	if(ask_question_yn("does this rom have a battery backup (y/n)? [n] ")) {
-		unif_chunk_t	chunk_header_UNIF;
-		uint8_t			chunk_data = 0;
+		unif_chunk_t chunk_header_UNIF;
+		uint8_t      chunk_data = 0;
 
 		memcpy(chunk_header_UNIF.id, "BATR", 4);
 		chunk_header_UNIF.length = sizeof(uint8_t);
@@ -206,15 +206,15 @@ UNIF_RETURN_CODE write_batr(FILE *file) {
 
 
 /*-----------------------------------------------------------------------------
-// Name: write_vror(FILE *file)
+// Name: write_vror
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_vror(FILE *file) {
 
 	assert(file != 0);
 
 	if(ask_question_yn("enable VRAM override (y/n)? [n] ")) {
-		unif_chunk_t	chunk_header_UNIF;
-		uint8_t			chunk_data = 0;
+		unif_chunk_t chunk_header_UNIF;
+		uint8_t      chunk_data = 0;
 
 		memcpy(chunk_header_UNIF.id, "VROR", 4);
 		chunk_header_UNIF.length = sizeof(uint8_t);
@@ -226,7 +226,7 @@ UNIF_RETURN_CODE write_vror(FILE *file) {
 }
 
 /*-----------------------------------------------------------------------------
-// Name: write_mirr(FILE *file)
+// Name: write_mirr
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_mirr(FILE *file) {
 
@@ -257,12 +257,12 @@ UNIF_RETURN_CODE write_mirr(FILE *file) {
 }
 
 /*-----------------------------------------------------------------------------
-// Name: write_mapr(FILE *file)
+// Name: write_mapr
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_mapr(FILE *file) {
 
-	unif_chunk_t	chunk_header_UNIF;
-	char			board_name[64];
+	unif_chunk_t chunk_header_UNIF;
+	char         board_name[64];
 
 	assert(file != 0);
 
@@ -284,15 +284,15 @@ UNIF_RETURN_CODE write_mapr(FILE *file) {
 }
 
 /*-----------------------------------------------------------------------------
-// Name: write_name(FILE *file)
+// Name: write_name
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_name(FILE *file) {
 
 	assert(file != 0);
 
 	if(ask_question_yn("do you want an internal ROM name (y/n)? [n] ")) {
-		unif_chunk_t  chunk_header_UNIF;
-		char		internal_name[0x400]; /* more than enough ? */
+		unif_chunk_t chunk_header_UNIF;
+		char         internal_name[0x400]; /* more than enough ? */
 
 		printf("what is the internal name? ");
 		memset(internal_name, 0, sizeof(internal_name));
@@ -315,7 +315,7 @@ UNIF_RETURN_CODE write_name(FILE *file) {
 }
 
 /*-----------------------------------------------------------------------------
-// Name: write_prg(FILE *file, uint8_t *prg_code, size_t size)
+// Name: write_prg
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_prg(FILE * file, uint8_t *prg_code, size_t size) {
 
@@ -333,7 +333,7 @@ UNIF_RETURN_CODE write_prg(FILE * file, uint8_t *prg_code, size_t size) {
 }
 
 /*-----------------------------------------------------------------------------
-// Name: write_chr(FILE *file, uint8_t *chr_code, size_t size)
+// Name: write_chr
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_chr(FILE *file, uint8_t *chr_code, size_t size) {
 
@@ -353,7 +353,7 @@ UNIF_RETURN_CODE write_chr(FILE *file, uint8_t *chr_code, size_t size) {
 }
 
 /*-----------------------------------------------------------------------------
-// Name: write_tvci(FILE *file)
+// Name: write_tvci
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_tvci(FILE *file) {
 
@@ -381,15 +381,15 @@ UNIF_RETURN_CODE write_tvci(FILE *file) {
 
 
 /*-----------------------------------------------------------------------------
-// Name: write_ctrl(FILE *file)
+// Name: write_ctrl
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_ctrl(FILE *file) {
 
 	assert(file != 0);
 
 	if(ask_question_yn("do you want a CTRL block (y/n)? [n] ")) {
-		unif_chunk_t	chunk_header_UNIF;
-		uint8_t			ctrl_data = 0;
+		unif_chunk_t chunk_header_UNIF;
+		uint8_t      ctrl_data = 0;
 
 		if(ask_question_yn( "does this cart use a standard joypad (y/n)? [n] ")) {
 			ctrl_data |= CTRL_STDJOY;
@@ -427,17 +427,17 @@ UNIF_RETURN_CODE write_ctrl(FILE *file) {
 
 
 /*-----------------------------------------------------------------------------
-// Name: write_dinf(FILE *file)
+// Name: write_dinf
 //---------------------------------------------------------------------------*/
 UNIF_RETURN_CODE write_dinf(FILE *file) {
 
 	assert(file != 0);
 
 	if(ask_question_yn("do you want a DINF block (y/n)? [n] ")) {
-		unif_chunk_t  	chunk_header_UNIF;
-		dumper_info_t	dinf_block;
-		unsigned		tmp_num;
-		char			numeric_line[256];
+		unif_chunk_t  chunk_header_UNIF;
+		dumper_info_t dinf_block;
+		unsigned      tmp_num;
+		char          numeric_line[256];
 
 		printf("%s\n", "Name? ( 100 chars max ):");
 		memset(dinf_block.dumper_name, 0, sizeof(dinf_block.dumper_name));
@@ -458,7 +458,7 @@ UNIF_RETURN_CODE write_dinf(FILE *file) {
 				return UNIF_INPUT_FAIL;
 			}
 
-			if(sscanf(numeric_line, "%u", &tmp_num) == 1) {
+			if(sscanf(numeric_line, "%255u", &tmp_num) == 1) {
 				break;
 			}
 
@@ -472,7 +472,7 @@ UNIF_RETURN_CODE write_dinf(FILE *file) {
 				return UNIF_INPUT_FAIL;
 			}
 
-			if(sscanf(numeric_line, "%u", &tmp_num) == 1) {
+			if(sscanf(numeric_line, "%255u", &tmp_num) == 1) {
 				break;
 			}
 		} while(1);
@@ -485,7 +485,7 @@ UNIF_RETURN_CODE write_dinf(FILE *file) {
 				return UNIF_INPUT_FAIL;
 			}
 
-			if(sscanf(numeric_line, "%u", &tmp_num) == 1) {
+			if(sscanf(numeric_line, "%255u", &tmp_num) == 1) {
 				break;
 			}
 		} while(1);
@@ -513,7 +513,7 @@ UNIF_RETURN_CODE write_dinf(FILE *file) {
 }
 
 /*-----------------------------------------------------------------------------
-// Name: make_unif_file_from_nes(const char *unif_file, const char *ines_file)
+// Name: make_unif_file_from_nes
 //---------------------------------------------------------------------------*/
 void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 
@@ -529,12 +529,12 @@ void make_unif_file_from_nes(const char *unif_file, const char *ines_file) {
 		printf("error loading iNES file\n");
 		return;
 	}
-	
+
 	mirroring = mirroring_INES(&cart);
 
 	printf("source filename     - %s\n", ines_file);
 	printf("iNES mapper #       - %d.%d\n", mapper_INES(&cart), submapper_INES(&cart));
-	
+
 
 	switch(mirroring) {
 	case MIRR_HORIZONTAL:
@@ -585,11 +585,11 @@ int get_ines_mapper(const char *board_name, ines_info_t *info) {
 	mapr_num_table_t table[] = {
 		/* name, ines #, chr-rom, four_screen */
 		{ "NES-NROM",     0, 1, 0 }, /* NROM: No mapper, PRG-ROM, CHR-ROM */
-		{ "UNL-SA-NROM",  0, 1, 0 }, 
+		{ "UNL-SA-NROM",  0, 1, 0 },
 		{ "NES-NROM-128", 0, 1, 0 }, /* NROM-128: No mapper, PRG-ROM, CHR-ROM */
 		{ "NES-NROM-256", 0, 1, 0 }, /* NROM-256: No mapper, PRG-ROM, CHR-ROM */
 		{ "NES-RROM",     0, 1, 0 }, /* NES-RROM: Same as NROM (Only used in Clu Clu land) */
-		
+
 		{ "NES-SAROM",    1, 1, 0 }, /* 128KB PRG (28-pin), 64KB CHR, 8KB S-RAM or W-RAM */
 		{ "NES-SBROM",    1, 1, 0 }, /* 128KB PRG (28-pin), 64KB CHR (28-pin) */
 		{ "NES-SCROM",    1, 1, 0 }, /* 128KB PRG (28-pin), 128KB CHR (32-pin) */
@@ -602,7 +602,7 @@ int get_ines_mapper(const char *board_name, ines_info_t *info) {
 		{ "NES-SLROM",    1, 1, 0 }, /* 256KB PRG, 128KB CHR */
 		{ "NES-SL1ROM",   1, 1, 0 }, /* */
 		{ "NES-SL2ROM",   1, 1, 0 }, /* */
-		{ "NES-SL3ROM",   1, 1, 0 }, /* */		
+		{ "NES-SL3ROM",   1, 1, 0 }, /* */
 		{ "NES-SLRROM",   1, 1, 0 }, /* 256KB PRG, 128KB CHR (non JEDEC-pinout) */
 		{ "NES-SNROM",    1, 0, 0 }, /* 256KB PRG, 8KB C-RAM banked, 8KB S-RAM or W-RAM  */
 		{ "NES-SOROM",    1, 0, 0 }, /* 256KB PRG, 128KB CHR, 16KB S-RAM or W-RAM thru CHR bit */
@@ -611,7 +611,7 @@ int get_ines_mapper(const char *board_name, ines_info_t *info) {
 
 		{ "NES-UNROM",    2, 0, 0 }, /* UNROM: 74LS32+74LS161 mapper, 128k PRG, 8k CHR-RAM */
 		{ "NES-UOROM",    2, 0, 0 }, /* UOROM: 74LS32+74LS161 mapper, 128k PRG, 8k CHR-RAM */
-		
+
 		{ "NES-CNROM",    3, 0, 0 }, /* CNROM: LS161 mapper, PRG-ROM, CHR-ROM?/CHR-RAM */
 		{ "NES-TBROM",    4, 1, 0 },
 		{ "NES-TEROM",    4, 1, 0 }, /* TEROM: MMC3A, PRG ROM, CHR ROM, (32k ROMs) */
@@ -661,16 +661,16 @@ TL1ROM: Same as TLROM
 	assert(board_name != 0);
 	assert(info != 0);
 
-	info->has_chr_rom	= 0;
-	info->ines_number	= 0;
-	info->four_screen	= 0;
+	info->has_chr_rom = 0;
+	info->ines_number = 0;
+	info->four_screen = 0;
 
 	for(tbl_ptr = table; tbl_ptr->board_name != 0; ++tbl_ptr) {
 
 		if(unif_strncasecmp(board_name, tbl_ptr->board_name, 32) == 0) {
-			info->has_chr_rom	= tbl_ptr->chr_rom;
-			info->ines_number	= tbl_ptr->ines_number;
-			info->four_screen	= tbl_ptr->four_screen;
+			info->has_chr_rom = tbl_ptr->chr_rom;
+			info->ines_number = tbl_ptr->ines_number;
+			info->four_screen = tbl_ptr->four_screen;
 			return 0;
 		}
 	}
@@ -679,7 +679,7 @@ TL1ROM: Same as TLROM
 }
 
 /*-----------------------------------------------------------------------------
-// Name: get_cart_type(const char *filename)
+// Name: get_cart_type
 //---------------------------------------------------------------------------*/
 CART_TYPE get_cart_type(const char *filename) {
     union {
@@ -695,7 +695,8 @@ CART_TYPE get_cart_type(const char *filename) {
 
 	/* read the header data */
 	if(fread(&headers, 1, sizeof(headers), file) == 0) {
-		return UNIF_READ_FAILED;
+		fclose(file);
+		return CART_INVALID;
 	}
 
 	fclose(file);
