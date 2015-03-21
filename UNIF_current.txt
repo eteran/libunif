@@ -3,9 +3,9 @@
                  (Universal NES Image) file format
 
         Created by Tennessee Carmel-Veilleux (veilleux@ameth.org)
-                    REV 7b, November 28th, 2000
+                    REV 7c, March 21st, 2015
 					
-             Maintinted by Evan Teran (eteran@alum.rit.edu)        
+             Maintinted by Evan Teran (evan.teran@gmail.com)        
  
 
 ***********THIS IS AN OPEN STANDARD. IT IS OPEN TO SUGGESTIONS**************
@@ -84,7 +84,7 @@ Sample structure:
 
 structure UNIF_chunk [
    char chunk_ID[4]; /* Chunk identification string. Can also be considered a
-                        number. ASCII format */
+                        number. UTF-8 format */
    dword length; /* Data length, in little-endian format */
 ];
 
@@ -114,7 +114,7 @@ Revision: 1
 Description: This is supplemental information about the mapper. DO NOT USE
              A MAPPER NUMBER HERE ! Rather use the BOARD NAME. There is
              already a list in progress describing each NES cart and the
-             board it uses. The string is NULL-TERMINATED.
+             board it uses. The string is NULL-TERMINATED UTF-8.
 
 examples: N,E,S,-,N,R,O,M,-,2,5,6,\0 -> This "No mapper"
           N,E,S,-,U,N,R,O,M,\0       -> This is (LS161+LS32)
@@ -150,7 +150,7 @@ licensing information for homebrew games.***
 ID: [NAME]
 Length: ??
 Revision: 1
-Description: NULL-terminated string containing the name of the game. If not
+Description: NULL-terminated UTF-8 string containing the name of the game. If not
              present, use the filename as the name.
 
 ID: [TVCI]
@@ -169,12 +169,12 @@ Revision: 2
 Description: Dumper information block:
  structure dumper_info [
 
-   char dumper_name[100]; /* NULL-terminated string containing the name
+   char dumper_name[100]; /* NULL-terminated UTF-8 string containing the name
                               of the person who dumped the cart. */
    byte day; /* Day of the month when cartridge was dumped */
    byte month; /* Month of the year when cartridge was dumped */
    word year; /* Year during which the cartridge was dumped */
-   char dumper_agent[100]; /* NULL-terminated string containing the name of
+   char dumper_agent[100]; /* NULL-terminated UTF-8 string containing the name of
                               the ROM-dumping means used */
  ]
 
@@ -265,7 +265,7 @@ Conclusion
 This ends the specification for Revision 7 of UNIF. If you have ANY 
 suggestions to make regarding the UNIF file format, such as chunk ideas or
 modifications, or would like to collaborate to the elaboration and design
-process, e-mail Evan Teran at: eteran@alum.rit.edu.
+process, e-mail Evan Teran at: evan.teran@gmail.com.
 
 A multi-platform C Code Library for UNIF support was made by Evan Teran. It
 is available at http://codef00.com/projects#unif.
@@ -300,5 +300,5 @@ NES's hardware aspects.
 T. Alex Reed {W1k} (rizen@netzero.net) for suggestions of additions
 to UNIF. He also pointed out some mistakes in the original specifications.
 
-Evan Teran {proxy} (eteran@alum.rit.edu) for making suggestions as well as
+Evan Teran {proxy} (evan.teran@gmail.com) for making suggestions as well as
 writing a .NES->UNIF converter and the LIB_UNIF library.
