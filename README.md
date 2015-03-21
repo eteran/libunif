@@ -1,0 +1,3 @@
+The UNIF format is a portable, flexible REPLACEMENT of the NES standard (Designed by Marat Fayzullin). It is a chunked file format in the lines of the Amiga IFF (LBM), Microsoft RIFF (WAV) and Autodesk 3D studio mesh files (3DS). The goal of having a chunked definition is to provide flexibility and ease of implementation, as data is described in blocks with type IDs referring to them and header information to provide a selective data reading.
+
+The format uses symetric data conversion for numerical compatibility between the different platforms' byte ordering. The ordering used is the 6502 Byte order (Intel).
