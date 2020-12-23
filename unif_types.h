@@ -40,6 +40,8 @@ extern "C"{
 	#endif
 #elif defined (__HAIKU__)
 	#include <stdint.h>
+#elif defined (__APPLE__) && defined (__MACH__)
+	#include <stdint.h>
 #elif defined (__linux__) || defined(__linux) || defined(__gnu_linux__)
 	#include <stdint.h>
 #elif defined(SunOS)
